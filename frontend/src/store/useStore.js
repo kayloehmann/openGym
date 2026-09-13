@@ -24,7 +24,7 @@ export const DEF = {
   unit: 'kg', restSec: 90, restPauseSec: 15, sound: true, soundOnSilent: false, timerFlash: false, keepAwake: true, lang: 'en',
   theme: 'dark', accent: 'lime', body: 'male', targetW: null,
   bodyweight: [], routines: [], week: {}, dayPlan: {},
-  exWeights: {}, workouts: [], active: null, customEx: [], gifSize: 'full',
+  exWeights: {}, workouts: [], active: null, customEx: [], gifSize: 'full', showExerciseVideos: false,
   // How the active workout is laid out — 'cards' (one exercise at a time with Prev/Next),
   // 'list' (every exercise stacked and scrollable) or 'compact' (that stack stripped to just
   // names and set rows — no media, tags, notes, last-time or progression line). Purely
@@ -49,7 +49,8 @@ export const DEF = {
   // belongs to one exercise in one plan, and from a session note, which belongs to one day.
   exNotes: {},
   // Per-exercise YouTube demonstrations (built-in and custom), shared across devices.
-  // Each entry is {url, title}; no iframe HTML or third-party state is stored.
+  // Each entry is {url, title}; no iframe HTML or third-party state is stored. Their
+  // visibility is opt-in via showExerciseVideos, independently of GIF size.
   exVideos: {},
   // Favourite exercise ids (issue #6) — sorted to the top of the picker/Library. Personal, so
   // it syncs with the profile but is never part of a shared plan bundle (lib/favourites.js).

@@ -76,10 +76,11 @@ export const SearchField = forwardRef(function SearchField({ value, onChange, on
 
 /* ============================ switch ============================ */
 
-export function Switch({ checked, onChange, disabled }) {
+export function Switch({ checked, onChange, disabled, label }) {
   return (
     <button
       role="switch"
+      aria-label={label}
       aria-checked={!!checked}
       disabled={disabled}
       className={'sw' + (checked ? ' on' : '')}

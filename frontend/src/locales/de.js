@@ -3,6 +3,7 @@ import { VIDEO_EN } from '../lib/video-locale.js'
 export default {
   ...VIDEO_EN,
   'Exercise videos': 'Übungsvideos',
+  'Show saved videos in exercise details and workouts.': 'Gespeicherte Videos in Übungsdetails und Workouts anzeigen.',
   'Manage videos': 'Videos verwalten',
   'YouTube videos play inside the exercise and workout views.': 'YouTube-Videos werden direkt in der Übungsansicht und im Workout abgespielt.',
   'YouTube URL (https://…)': 'YouTube-URL (https://…)',

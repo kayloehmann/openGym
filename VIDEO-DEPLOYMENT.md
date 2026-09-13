@@ -10,7 +10,14 @@ first frame). This discloses the viewer's IP address and video ID to Google's
 thumbnail service; the openGym server does not proxy or download videos or previews.
 Videos are third-party content and require an internet connection.
 
+Videos are hidden by default, including for profiles that already have saved links.
+The profile setting **During a workout → Exercise videos** enables them in both
+exercise details and workouts. With it off, no YouTube preview or player is rendered;
+saved links remain available under **Manage videos**. The separate animation setting
+can hide GIFs while leaving opted-in videos visible.
+
 To build a static frontend, run `npm ci --ignore-scripts` and `npm run build`
 in `frontend/`. For an existing v1.3.7 Docker deployment, copy `frontend/dist/`
 into a build context as `dist/` and build `web/Dockerfile.video-overlay` there.
-Replace only the web image; the API and its persistent data need no migration.
+Tag this opt-in release `opengym-web:1.3.7-kay-video6` and replace only the web
+image; the API and its persistent data need no migration.

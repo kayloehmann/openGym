@@ -65,6 +65,8 @@ afterEach(() => {
 
 const mount = () => act(() => root.render(<Settings />))
 const segButton = label => [...host.querySelectorAll('.seg button')].find(b => b.textContent === label)
+const exerciseVideosSwitch = () => [...host.querySelectorAll('[role="switch"]')]
+  .find(button => button.closest('.lrow')?.textContent.includes('Exercise videos'))
 
 describe('Settings — exercise animations', () => {
   it('offers Full / Small / Hidden and writes gifSize to the store', () => {
@@ -86,5 +88,18 @@ describe('Settings — exercise animations', () => {
     mount()
     expect(segButton('Full').getAttribute('aria-pressed')).toBe('true')
     expect(segButton('Hidden').getAttribute('aria-pressed')).toBe('false')
+  })
+
+  it('keeps exercise videos opt-in for existing profiles and saves the switch', () => {
+    mount()
+    expect(exerciseVideosSwitch()).toBeTruthy()
+    expect(exerciseVideosSwitch().getAttribute('aria-label')).toBe('Exercise videos')
+    expect(exerciseVideosSwitch().getAttribute('aria-checked')).toBe('false')
+    act(() => exerciseVideosSwitch().click())
+    expect(mocks.S.showExerciseVideos).toBe(true)
+    mount()
+    expect(exerciseVideosSwitch().getAttribute('aria-checked')).toBe('true')
+    act(() => exerciseVideosSwitch().click())
+    expect(mocks.S.showExerciseVideos).toBe(false)
   })
 })
