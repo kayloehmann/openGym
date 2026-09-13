@@ -72,3 +72,52 @@ describe('Media gifSize', () => {
     expect(host.querySelector('.exmedia.mini')).toBeFalsy()
   })
 })
+
+describe('Media with multiple exercise videos', () => {
+  it('switches between multiple videos and the built-in animation', () => {
+    mocks.S.exVideos = { bench: [
+      { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', title: 'Form' },
+      { url: 'https://youtu.be/M7lc1UVf-VE', title: 'Variation' },
+    ] }
+    mount({})
+    expect(host.querySelectorAll('.exmedia-carousel-dots button')).toHaveLength(3)
+    expect(host.querySelector('iframe')).toBeFalsy()
+    expect(host.querySelector('.exmedia-video-play')).toBeTruthy()
+    expect(host.querySelector('.exmedia-video-poster').getAttribute('src')).toBe('https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg')
+    expect(host.querySelector('.exmedia-carousel-title').textContent).toContain('Form')
+    act(() => host.querySelector('.exmedia-carousel-arrow:last-child').click())
+    expect(host.querySelector('iframe')).toBeFalsy()
+    expect(host.querySelector('.exmedia-carousel-title').textContent).toContain('Variation')
+    expect(host.querySelector('.exmedia-video-poster').getAttribute('src')).toBe('https://i.ytimg.com/vi/M7lc1UVf-VE/hqdefault.jpg')
+    act(() => host.querySelector('.exmedia-carousel-arrow:last-child').click())
+    expect(host.querySelector('iframe')).toBeFalsy()
+    expect(host.querySelector('.exmedia img')).toBeTruthy()
+    expect(host.querySelector('.exmedia-carousel-title').textContent).toContain('3 / 3')
+    act(() => host.querySelector('.exmedia-carousel-arrow:first-child').click())
+    expect(host.querySelector('.exmedia-video-play')).toBeTruthy()
+    expect(host.querySelector('.exmedia-carousel-title').textContent).toContain('2 / 3')
+    expect(host.querySelector('.exmedia-video-poster').getAttribute('src')).toBe('https://i.ytimg.com/vi/M7lc1UVf-VE/hqdefault.jpg')
+  })
+
+  it('shows videos for custom exercises without a built-in GIF', () => {
+    mocks.S.exVideos = { custom: [{ url: 'https://youtu.be/dQw4w9WgXcQ' }] }
+    mount({ ex: { id: 'custom', n: 'Custom exercise' } })
+    expect(host.querySelector('.exmedia-video-play')).toBeTruthy()
+    expect(host.querySelector('.exmedia-video-poster')).toBeTruthy()
+  })
+
+  it('moves to the next video when the preview is swiped left', () => {
+    mocks.S.exVideos = { custom: [
+      { url: 'https://youtu.be/dQw4w9WgXcQ' },
+      { url: 'https://youtu.be/M7lc1UVf-VE' },
+    ] }
+    mount({ ex: { id: 'custom', n: 'Custom exercise' } })
+    const stage = host.querySelector('.exmedia-stage')
+    const start = new Event('touchstart', { bubbles: true })
+    Object.defineProperty(start, 'touches', { value: [{ clientX:220 }] })
+    const end = new Event('touchend', { bubbles: true })
+    Object.defineProperty(end, 'changedTouches', { value: [{ clientX:100 }] })
+    act(() => { stage.dispatchEvent(start); stage.dispatchEvent(end) })
+    expect(host.querySelector('.exmedia-carousel-title').textContent).toContain('2 / 2')
+  })
+})

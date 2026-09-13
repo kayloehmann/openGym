@@ -12,6 +12,7 @@ import { t, dateLocale, instrFor, exerciseNameFor, getLang, INSTR_LANGS } from '
 import { nav } from './lib/nav.js'
 import { buildStarterPlan, starterPlanDays, starterPlanOptions } from './lib/starter.js'
 import Media, { Thumb } from './components/Media.jsx'
+import { parseYouTubeVideo, videosFor } from './lib/exercise-videos.js'
 import LineChart from './components/LineChart.jsx'
 import Stepper from './components/Stepper.jsx'
 import Icon from './components/Icon.jsx'
@@ -633,6 +634,55 @@ function OneRM({ ex }) {
   </>
 }
 
+function ExerciseVideos({ ex }) {
+  const entries = useStore(s => s.S.exVideos?.[ex.id])
+  const videos = videosFor({ exVideos: { [ex.id]: entries } }, ex.id)
+  const [url, setUrl] = useState('')
+  const [title, setTitle] = useState('')
+  const add = () => {
+    const video = parseYouTubeVideo(url)
+    if (!video) { toast(t('Enter a valid HTTPS YouTube video URL.')); return }
+    if (videos.some(v => v.id === video.id)) { toast(t('This video is already saved.')); return }
+    if (videos.length >= 20) { toast(t('Maximum 20 videos per exercise.')); return }
+    update(s => {
+      s.exVideos = s.exVideos || {}
+      s.exVideos[ex.id] = [...(s.exVideos[ex.id] || []), { url: video.url, title: title.trim().slice(0, 80) }]
+    })
+    setUrl('')
+    setTitle('')
+    toast(t('Video added'))
+  }
+  const remove = videoId => {
+    update(s => {
+      const next = [...(s.exVideos?.[ex.id] || [])]
+      const index = next.findIndex(item => parseYouTubeVideo(item?.url)?.id === videoId)
+      if (index < 0) return
+      next.splice(index, 1)
+      if (next.length) s.exVideos[ex.id] = next
+      else delete s.exVideos[ex.id]
+    })
+    toast(t('Video removed'))
+  }
+  return <>
+    <h3>{t('Exercise videos')}</h3>
+    <div className="small dim" style={{ marginBottom: 12 }}>{exerciseNameFor(ex)} · {t('YouTube videos play inside the exercise and workout views.')}</div>
+    {videos.map((video, index) => <div className="item row between" key={video.id} style={{ gap: 10 }}>
+      <div style={{ minWidth: 0 }}>
+        <div>{video.title || t('Video {0}', index + 1)}</div>
+        <div className="small dim" style={{ overflowWrap: 'anywhere' }}>{video.url}</div>
+      </div>
+      <Button variant="danger" onClick={() => remove(video.id)}>{t('Remove')}</Button>
+    </div>)}
+    <input className="input" type="url" inputMode="url" maxLength={300} placeholder={t('YouTube URL (https://…)')}
+      value={url} onChange={e => setUrl(e.target.value)} style={{ marginTop: 14 }} />
+    <input className="input" maxLength={80} placeholder={t('Video title (optional)')}
+      value={title} onChange={e => setTitle(e.target.value)} style={{ marginTop: 8 }} />
+    <div style={{ height: 10 }} />
+    <Button variant="primary" onClick={add}>{t('Add video')}</Button>
+  </>
+}
+export const exerciseVideosSheet = ex => ui().openSheet(() => <ExerciseVideos ex={ex} />)
+
 function ExerciseDetail({ ex, close }) {
   const st = useStore(s => s.S)
   const last = lastEntryFor(st, ex.id)
@@ -652,6 +702,7 @@ function ExerciseDetail({ ex, close }) {
       </button>
     </div>
     <Media ex={ex} />
+    <Button icon="play" onClick={() => exerciseVideosSheet(ex)}>{t('Manage videos')}</Button>
     <div className="row" style={{ gap: 6, flexWrap: 'wrap', margin: '10px 0' }}>
       <span className="tag acc">{t(ex.bp)}</span>
       {ex.bp === 'cardio' ? <span className="tag"><Icon name="target" />{t(MUSCLE_NAME['cardiovascular system'])}</span> : (ex.primaries?.length ? ex.primaries : (ex.tg ? [ex.tg] : [])).map((s, i) => <span key={i} className="tag"><Icon name="target" />{t(MUSCLE_NAME[s]  || s)}</span>)}
@@ -854,6 +905,7 @@ export function deleteCustomEx(ex, afterDelete) {
         s.customEx = (s.customEx || []).filter(x => x.id !== ex.id)
         s.routines.forEach(r => { r.ex = r.ex.filter(e => e.id !== ex.id); cleanupSg(r.ex) })
         delete s.exWeights[ex.id]
+        if (s.exVideos) delete s.exVideos[ex.id]
         s.favEx = (s.favEx || []).filter(id => id !== ex.id)
       })
       toast(t('Exercise deleted'))
@@ -1217,6 +1269,7 @@ function ExConfig({ ex, existing, onSave, onDelete, close, routine, initial }) {
   return <>
     <h3 className="capitalize">{exerciseNameFor(ex)}</h3>
     <Media ex={ex} />
+    <Button icon="play" onClick={() => exerciseVideosSheet(ex)}>{t('Manage videos')}</Button>
     {/* The same tags the exercise detail sheet shows, secondaries included: choosing what goes
         into a plan is exactly when "what else does this hit" matters, and until now that was
         only visible from the Exercises tab, after the fact. */}

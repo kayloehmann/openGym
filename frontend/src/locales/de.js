@@ -1,5 +1,24 @@
 // German UI strings. Keys are the English source strings (see lib/i18n.js).
+import { VIDEO_EN } from '../lib/video-locale.js'
 export default {
+  ...VIDEO_EN,
+  'Exercise videos': 'Übungsvideos',
+  'Manage videos': 'Videos verwalten',
+  'YouTube videos play inside the exercise and workout views.': 'YouTube-Videos werden direkt in der Übungsansicht und im Workout abgespielt.',
+  'YouTube URL (https://…)': 'YouTube-URL (https://…)',
+  'Video title (optional)': 'Videotitel (optional)',
+  'Video {0}': 'Video {0}',
+  'Add video': 'Video hinzufügen',
+  'Video added': 'Video hinzugefügt',
+  'Video removed': 'Video entfernt',
+  'Play video': 'Video abspielen',
+  'Video paused': 'Video pausiert',
+  'Animation': 'Animation',
+  'Previous video': 'Vorheriges Video',
+  'Next video': 'Nächstes Video',
+  'Enter a valid HTTPS YouTube video URL.': 'Bitte eine gültige HTTPS-YouTube-Video-URL eingeben.',
+  'This video is already saved.': 'Dieses Video ist bereits gespeichert.',
+  'Maximum 20 videos per exercise.': 'Maximal 20 Videos pro Übung.',
   // --- generic ---
   'Confirm': 'Bestätigen',
   'Cancel': 'Abbrechen',
