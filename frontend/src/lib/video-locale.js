@@ -2,6 +2,7 @@
 // other languages display clear English until native translations are available.
 export const VIDEO_EN = {
   'Exercise videos': 'Exercise videos',
+  'Show saved videos in exercise details and workouts.': 'Show saved videos in exercise details and workouts.',
   'Manage videos': 'Manage videos',
   'YouTube videos play inside the exercise and workout views.': 'YouTube videos play inside the exercise and workout views.',
   'YouTube URL (https://…)': 'YouTube URL (https://…)',

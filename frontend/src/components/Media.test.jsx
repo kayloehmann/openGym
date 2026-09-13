@@ -74,7 +74,37 @@ describe('Media gifSize', () => {
 })
 
 describe('Media with multiple exercise videos', () => {
+  it('hides saved videos by default without hiding the built-in animation', () => {
+    mocks.S.exVideos = { bench: [{ url: 'https://youtu.be/dQw4w9WgXcQ' }] }
+    mount({ minimizable: true })
+    expect(host.querySelector('.exmedia img')).toBeTruthy()
+    expect(host.querySelector('.exmedia-carousel')).toBeFalsy()
+    expect(host.querySelector('.exmedia-video-play')).toBeFalsy()
+    expect(host.querySelector('iframe')).toBeFalsy()
+  })
+
+  it('hides videos on custom exercises without a GIF until explicitly enabled', () => {
+    mocks.S.exVideos = { custom: [{ url: 'https://youtu.be/dQw4w9WgXcQ' }] }
+    mount({ ex: { id: 'custom', n: 'Custom exercise' } })
+    expect(host.innerHTML).toBe('')
+    mocks.S.showExerciseVideos = true
+    mount({ ex: { id: 'custom', n: 'Custom exercise' } })
+    expect(host.querySelector('.exmedia-video-play')).toBeTruthy()
+  })
+
+  it('shows opted-in videos even when workout animations are hidden', () => {
+    mocks.S.gifSize = 'off'
+    mocks.S.showExerciseVideos = true
+    mocks.S.exVideos = { bench: [{ url: 'https://youtu.be/dQw4w9WgXcQ' }] }
+    mount({ minimizable: true })
+    expect(host.querySelector('.exmedia-video-play')).toBeTruthy()
+    expect(host.querySelector('.exmedia-carousel-dots button')).toBeTruthy()
+    expect(host.querySelectorAll('.exmedia-carousel-dots button')).toHaveLength(1)
+    expect(host.querySelector('.exmedia img:not(.exmedia-video-poster)')).toBeFalsy()
+  })
+
   it('switches between multiple videos and the built-in animation', () => {
+    mocks.S.showExerciseVideos = true
     mocks.S.exVideos = { bench: [
       { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', title: 'Form' },
       { url: 'https://youtu.be/M7lc1UVf-VE', title: 'Variation' },
@@ -100,6 +130,7 @@ describe('Media with multiple exercise videos', () => {
   })
 
   it('shows videos for custom exercises without a built-in GIF', () => {
+    mocks.S.showExerciseVideos = true
     mocks.S.exVideos = { custom: [{ url: 'https://youtu.be/dQw4w9WgXcQ' }] }
     mount({ ex: { id: 'custom', n: 'Custom exercise' } })
     expect(host.querySelector('.exmedia-video-play')).toBeTruthy()
@@ -107,6 +138,7 @@ describe('Media with multiple exercise videos', () => {
   })
 
   it('moves to the next video when the preview is swiped left', () => {
+    mocks.S.showExerciseVideos = true
     mocks.S.exVideos = { custom: [
       { url: 'https://youtu.be/dQw4w9WgXcQ' },
       { url: 'https://youtu.be/M7lc1UVf-VE' },
@@ -119,5 +151,22 @@ describe('Media with multiple exercise videos', () => {
     Object.defineProperty(end, 'changedTouches', { value: [{ clientX:100 }] })
     act(() => { stage.dispatchEvent(start); stage.dispatchEvent(end) })
     expect(host.querySelector('.exmedia-carousel-title').textContent).toContain('2 / 2')
+  })
+
+  it('unmounts a playing video when the setting is switched off', () => {
+    mocks.S.showExerciseVideos = true
+    mocks.S.exVideos = { bench: [{ url: 'https://youtu.be/dQw4w9WgXcQ' }] }
+    mount({ minimizable: true })
+    act(() => host.querySelector('.exmedia-video-play').click())
+    expect(host.querySelector('iframe')).toBeTruthy()
+    mocks.S.showExerciseVideos = false
+    mount({ minimizable: true })
+    expect(host.querySelector('iframe')).toBeFalsy()
+    expect(host.querySelector('.exmedia-carousel')).toBeFalsy()
+    expect(host.querySelector('.exmedia img')).toBeTruthy()
+    mocks.S.showExerciseVideos = true
+    mount({ minimizable: true })
+    expect(host.querySelector('iframe')).toBeFalsy()
+    expect(host.querySelector('.exmedia-video-play')).toBeTruthy()
   })
 })

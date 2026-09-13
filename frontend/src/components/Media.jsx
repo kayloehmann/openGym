@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { imgSrc, gifSrc } from '../lib/exercises.js'
 import { useStore } from '../store/useStore.js'
 import { t, exerciseNameFor } from '../lib/i18n.js'
@@ -17,9 +17,9 @@ function VideoPoster({ video }) {
 // Custom exercises have no media — the animation stays blank by design (issue #11).
 // `minimizable` (workout view) adds a persistent minimize/expand control so the animation stops
 // eating the screen; the chosen size is saved to settings and carries across exercises and
-// future workouts (issue #12). Settings can also turn workout media off entirely
-// (gifSize 'off') — then nothing renders here and the exercise card closes up, exactly like
-// a custom exercise without media. Any other/legacy value behaves as 'full'.
+// future workouts (issue #12). gifSize 'off' hides the workout animation, but
+// separately enabled exercise videos remain available. Any other/legacy value
+// behaves as 'full'.
 export default function Media({ ex, id, compact, minimizable }) {
   const [playing, setPlaying] = useState(true)
   const [videoIndex, setVideoIndex] = useState(0)
@@ -32,16 +32,18 @@ export default function Media({ ex, id, compact, minimizable }) {
   // both, and a tap tries again — no text, so nothing new to translate.
   const [failed, setFailed] = useState(null)
   const gifSize = useStore(s => s.S.gifSize)
+  const showExerciseVideos = useStore(s => s.S.showExerciseVideos === true)
   const videoEntries = useStore(s => s.S.exVideos?.[ex.id])
-  const videos = videosFor({ exVideos: { [ex.id]: videoEntries } }, ex.id)
+  const videos = showExerciseVideos ? videosFor({ exVideos: { [ex.id]: videoEntries } }, ex.id) : []
+  const showAnimation = !!ex.gif && !(minimizable && gifSize === 'off')
   const update = useStore(s => s.update)
-  if (!ex.gif && !videos.length) return null
-  if (minimizable && gifSize === 'off') return null
+  useEffect(() => { if (!showExerciseVideos) setVideoPlaying(false) }, [showExerciseVideos])
+  if (!showAnimation && !videos.length) return null
   const mini = minimizable && gifSize === 'mini'
   const toggleSize = e => { e.stopPropagation(); setVideoPlaying(false); update(s => { s.gifSize = mini ? 'full' : 'mini' }) }
-  const selectedVideo = videoIndex < 0 ? null : (videos[videoIndex] || videos[0] || null)
+  const selectedVideo = videoIndex < 0 && showAnimation ? null : (videos[videoIndex] || videos[0] || null)
   const selectVideo = index => { setVideoPlaying(false); setVideoIndex(index) }
-  const slideCount = videos.length + (ex.gif ? 1 : 0)
+  const slideCount = videos.length + (showAnimation ? 1 : 0)
   const selectedPosition = selectedVideo ? (videos[videoIndex] ? videoIndex : 0) : videos.length
   const go = step => {
     if (slideCount < 2) return
@@ -76,7 +78,7 @@ export default function Media({ ex, id, compact, minimizable }) {
         : (failed === 'all'
           ? <div className="exmedia-x" onClick={onTap}><Icon name="dumbbell" /></div>
           : <img decoding="async" draggable={false} src={showGif ? gifSrc(ex) : imgSrc(ex)} alt={exerciseNameFor(ex)} onError={onError} onClick={onTap} />)}
-      {minimizable && (
+      {minimizable && gifSize !== 'off' && (
         <button className="giftoggle" onClick={toggleSize}>
           <Icon name={mini ? 'expand' : 'minimize'} />{mini ? t('Expand') : t('Minimize')}
         </button>
@@ -94,7 +96,7 @@ export default function Media({ ex, id, compact, minimizable }) {
           <div className="exmedia-carousel-dots">
             {videos.map((video, index) => <button key={video.id} type="button" className={selectedPosition === index ? 'on' : ''}
               aria-label={video.title || t('Video {0}', index + 1)} aria-current={selectedPosition === index ? 'true' : undefined} onClick={() => selectVideo(index)} />)}
-            {ex.gif && <button type="button" className={selectedPosition === videos.length ? 'on' : ''}
+            {showAnimation && <button type="button" className={selectedPosition === videos.length ? 'on' : ''}
               aria-label={t('Animation')} aria-current={selectedPosition === videos.length ? 'true' : undefined} onClick={() => selectVideo(-1)} />}
           </div>
         </div>

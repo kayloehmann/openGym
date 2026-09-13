@@ -298,14 +298,19 @@ export default function Settings() {
             onChange={v => update(s => { s.keepAwake = v })} />
         </Row>
       )}
-      {/* 'full'/'mini' is also what the tap-toggle on the workout animation writes; 'off' hides
-          workout media entirely (library, detail sheet and picker thumbs are unaffected).
-          Legacy/unknown values read as 'full'. */}
+      {/* 'full'/'mini' is also what the tap-toggle on workout media writes; 'off' hides
+          the animation, but separately opted-in videos remain visible. Library, detail
+          sheet and picker thumbnails are unaffected. Legacy values read as 'full'. */}
       <Row icon="figureRun" iconTint="var(--green)" title={t('Exercise animations')}>
         <Segmented className="seg-inline"
           options={[{ value: 'full', label: t('Full') }, { value: 'mini', label: t('Small') }, { value: 'off', label: t('Hidden') }]}
           value={S.gifSize === 'mini' || S.gifSize === 'off' ? S.gifSize : 'full'}
           onChange={v => update(s => { s.gifSize = v })} />
+      </Row>
+      <Row icon="play" iconTint="var(--blue)" title={t('Exercise videos')}
+        subtitle={t('Show saved videos in exercise details and workouts.')}>
+        <Switch checked={S.showExerciseVideos === true} label={t('Exercise videos')}
+          onChange={v => update(s => { s.showExerciseVideos = v })} />
       </Row>
       <Row icon="bell" iconTint="var(--pink)" title={t('Sounds')}>
         {/* Turning Sounds on is a tap: unlock the audio context now so a timer that ends before
