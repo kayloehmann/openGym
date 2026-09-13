@@ -1,0 +1,12 @@
+when:
+  - event: [push, pull_request, manual]
+
+steps:
+  frontend:
+    image: node:22-bookworm-slim
+    commands:
+      - cd frontend
+      - npm ci
+      - npm test
+      - node scripts/check-locales.mjs
+      - npm run build
