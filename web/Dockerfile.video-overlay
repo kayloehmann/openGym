@@ -2,5 +2,5 @@
 # over the pinned upstream web image. The API image and profile data remain unchanged.
 FROM ghcr.io/duartesantos8/opengym-web:1.3.7@sha256:b123eb91c638c537eaa0d8e6122d81559d5e0de961951e5012243f9b1c9bcef8
 LABEL org.opencontainers.image.title="opengym-web with per-exercise YouTube videos" \
-      org.opencontainers.image.version="1.3.7-kay-video5"
+      org.opencontainers.image.version="1.3.7-kay-video6"
 COPY dist/ /usr/share/nginx/html/

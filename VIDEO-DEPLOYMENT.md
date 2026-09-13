@@ -19,4 +19,5 @@ can hide GIFs while leaving opted-in videos visible.
 To build a static frontend, run `npm ci --ignore-scripts` and `npm run build`
 in `frontend/`. For an existing v1.3.7 Docker deployment, copy `frontend/dist/`
 into a build context as `dist/` and build `web/Dockerfile.video-overlay` there.
-Replace only the web image; the API and its persistent data need no migration.
+Tag this opt-in release `opengym-web:1.3.7-kay-video6` and replace only the web
+image; the API and its persistent data need no migration.
