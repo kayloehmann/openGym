@@ -1298,6 +1298,16 @@ components:
           type: object
           description: 'Per-exercise last/best weight memory: exercise id → {w, d}.'
           additionalProperties: { type: object, additionalProperties: true }
+        exVideos:
+          type: object
+          description: 'Per-exercise YouTube demonstration videos, ordered by user preference.'
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              properties:
+                url: { type: string, format: uri }
+                title: { type: string }
         reminder:
           type: object
           description: >-

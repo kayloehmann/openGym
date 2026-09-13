@@ -654,7 +654,8 @@ body.chips-dragging *{cursor:inherit}
 }
 .wprog{height:4px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-bottom:16px}
 .wprog i{display:block;height:100%;background:var(--acc);border-radius:99px;transition:width var(--med) var(--ease)}
-.exmedia{position:relative;border-radius:var(--r-lg);overflow:hidden;background:#fff;margin-bottom:12px}
+.exmedia{position:relative;min-width:0;max-width:100%;border-radius:var(--r-lg);overflow:hidden;background:#fff;margin-bottom:12px}
+.exmedia-stage{position:relative;min-width:0;max-width:100%;touch-action:pan-y}
 .exmedia img{width:100%;height:320px;object-fit:contain;display:block}
 .exmedia .gifhint,.exmedia .giftoggle{
   position:absolute;bottom:9px;display:inline-flex;align-items:center;gap:4px;
@@ -675,6 +676,22 @@ body.chips-dragging *{cursor:inherit}
 .exmedia-x{width:100%;height:320px;display:flex;align-items:center;justify-content:center;color:var(--label-3);font-size:34px}
 .exmedia.compact .exmedia-x{height:120px}
 .exmedia.mini .exmedia-x{height:84px}
+.exmedia-carousel{display:flex;align-items:center;gap:8px;padding:9px 10px;background:var(--surface-2);color:var(--label)}
+.exmedia-carousel-arrow{flex:none;display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:50%;background:var(--surface);color:var(--label);cursor:pointer}
+.exmedia-carousel-arrow:disabled{opacity:.4;cursor:default}
+.exmedia-carousel-center{flex:1;min-width:0;text-align:center}
+.exmedia-carousel-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:600}
+.exmedia-carousel-title span{margin-left:5px;color:var(--label-3);font-weight:400}
+.exmedia-carousel-dots{display:flex;justify-content:center;gap:6px;margin-top:6px}
+.exmedia-carousel-dots button{width:7px;height:7px;padding:0;border:0;border-radius:50%;background:var(--label-3);opacity:.55;cursor:pointer}
+.exmedia-carousel-dots button.on{background:var(--acc);opacity:1}
+.exmedia-video-frame{display:block;width:100%;max-width:100%;min-width:0;aspect-ratio:16/9;border:0;background:#000}
+.exmedia-video-play{position:relative;display:grid;place-items:center;width:100%;max-width:100%;min-width:0;aspect-ratio:16/9;overflow:hidden;border:0;background:#161616;color:#fff;cursor:pointer}
+.exmedia .exmedia-video-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.exmedia-video-play-icon{position:relative;z-index:1;display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,.65);font-size:23px}
+.exmedia-video-mini{position:relative;display:grid;place-items:center;height:84px;overflow:hidden;background:#161616;color:#fff;font-size:12px}
+.exmedia-video-mini span{position:relative;z-index:1;padding:5px 10px;border-radius:99px;background:rgba(0,0,0,.65)}
+.exmedia.compact .exmedia-video-play{max-height:180px}
 
 .sethead{
   display:flex;align-items:center;gap:8px;padding:0 0 6px;
@@ -1144,13 +1161,14 @@ body.chips-dragging *{cursor:inherit}
 .ss-amp{text-align:center;font-size:15px;font-weight:600;color:var(--acc);margin:14px 0 8px}
 
 /* --- workout list view: every unit stacked, the current one outlined --- */
-.workout-list{display:grid;gap:14px}
+.workout-list{display:grid;grid-template-columns:minmax(0,1fr);min-width:0;gap:14px}
 .wl-unit{
+  min-width:0;
   border-radius:var(--r-lg);padding:14px 14px 4px;
   background:var(--surface-2);
 }
 .wl-unit.cur{box-shadow:inset 0 0 0 1.5px var(--acc-line)}
-.wl-hd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.wl-hd{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px}
 @media (max-width:400px){
   .wl-unit{padding:10px 8px 2px}
 }

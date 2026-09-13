@@ -5,7 +5,7 @@ const workout = (id, d = '2026-09-01', start = 1) => ({ id, d, start, entries: [
 const routine = (id, name = id) => ({ id, name, ex: [] })
 const base = (over = {}) => ({
   unit: 'kg', restSec: 90, lang: 'en', week: { 1: ['r1'] }, dayPlan: {},
-  workouts: [], routines: [], bodyweight: [], customEx: [], favEx: [], exWeights: {}, exNotes: {}, barWeights: {},
+  workouts: [], routines: [], bodyweight: [], customEx: [], favEx: [], exWeights: {}, exNotes: {}, exVideos: {}, barWeights: {},
   equipProfiles: [], gymCards: [], _ts: 0, ...over
 })
 const ids = xs => (xs || []).map(x => x.id)
@@ -78,6 +78,15 @@ describe('mergeStates', () => {
     expect(m.exWeights).toEqual({ sq: { w: 110 }, bp: { w: 60 }, dl: { w: 140 } })
     expect(m.exNotes).toEqual({ sq: 'A note', dl: 'B note' })
     expect(m.barWeights).toEqual({ sq: 20, dl: 15 })
+  })
+
+  it('keeps videos for different exercises and prefers the newer list for the same exercise', () => {
+    const older = base({ _ts: 1, exVideos: { bench: [{ url: 'https://youtu.be/M7lc1UVf-VE' }], squat: [{ url: 'https://youtu.be/dQw4w9WgXcQ' }] } })
+    const newer = base({ _ts: 2, exVideos: { bench: [{ url: 'https://youtu.be/dQw4w9WgXcQ', title: 'new' }] } })
+    expect(mergeStates(older, newer).exVideos).toEqual({
+      bench: [{ url: 'https://youtu.be/dQw4w9WgXcQ', title: 'new' }],
+      squat: [{ url: 'https://youtu.be/dQw4w9WgXcQ' }],
+    })
   })
 
   it('is commutative on the union fields and idempotent', () => {
