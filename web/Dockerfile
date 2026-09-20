@@ -14,9 +14,8 @@ FROM --platform=$BUILDPLATFORM node:22-alpine AS build
 # is exactly what made the v1.2.15 web image fail to build.
 WORKDIR /app/frontend
 COPY frontend/package.json frontend/package-lock.json* ./
-# --ignore-scripts: the web image only needs `vite build`; the one heavy postinstall in this tree
-# (@capacitor/assets -> sharp, a libvips download from GitHub) is for drawing app icons and has
-# timed out on the shared runners — a lockfile-ignoring `npm install` fallback is no answer to that.
+# --ignore-scripts: the web image only needs `vite build`; platform-specific install hooks are
+# unnecessary in this stage, and keeping the lockfile authoritative makes builds reproducible.
 RUN npm ci --ignore-scripts
 COPY api/coach/core/ /app/api/coach/core/
 COPY frontend/ ./
@@ -67,4 +66,3 @@ HEALTHCHECK --interval=5m \
             --timeout=5s \
             --retries=3 \
             CMD wget --spider -q "http://127.0.0.1:${NGINX_PORT}/" || exit 1
-
