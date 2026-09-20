@@ -64,6 +64,18 @@ function mdBlock (src) {
 const refName = ref => ref.split('/').pop()
 const schemaLink = ref => `<a href="#schema-${refName(ref)}">${esc(refName(ref))}</a>`
 
+// fmtType emits a tiny, trusted HTML subset. Read its visible text without treating a regular
+// expression as an HTML sanitizer (it is only used to decide whether an array type needs parens).
+function visibleText (html) {
+  let text = '', inTag = false
+  for (const char of html) {
+    if (char === '<') inTag = true
+    else if (char === '>') inTag = false
+    else if (!inTag) text += char
+  }
+  return text
+}
+
 // A compact, human type for one JSON-schema node.
 function fmtType (s) {
   if (!s) return 'any'
@@ -73,7 +85,7 @@ function fmtType (s) {
   if (s.const !== undefined) return `always ${esc(JSON.stringify(s.const))}`
   if (s.type === 'array') {
     const it = s.items ? fmtType(s.items) : 'any'
-    return (/[ |]/.test(it.replace(/<[^>]*>/g, '')) ? `(${it})` : it) + '[]'
+    return (/[ |]/.test(visibleText(it)) ? `(${it})` : it) + '[]'
   }
   let t = Array.isArray(s.type) ? s.type.join(' | ') : (s.type || 'object')
   const bits = []

@@ -38,13 +38,16 @@ for (const m of MODULES) {
 
 // The real assertion: the server's own entry points, which pull the whole graph transitively.
 // A module added to the graph later is covered by this even if the list above never learns it.
-for (const entry of ['../src/state.js', '../src/tools.js']) {
+for (const { specifier, label } of [
+  { specifier: '../src/state.js', label: 'src/state.js' },
+  { specifier: '../src/tools.js', label: 'src/tools.js' }
+]) {
   try {
-    await import(new URL(entry, import.meta.url))
-    console.log(`  ok    mcp/${entry.replace('../', '')}`)
+    await import(new URL(specifier, import.meta.url))
+    console.log(`  ok    mcp/${label}`)
   } catch (e) {
     failed++
-    console.error(`  FAIL  mcp/${entry.replace('../', '')} — ${e.message}`)
+    console.error(`  FAIL  mcp/${label} — ${e.message}`)
   }
 }
 

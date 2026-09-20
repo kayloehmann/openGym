@@ -454,7 +454,12 @@ const CSRF_EXEMPT = new Set([
   'POST /api/login/options', 'POST /api/login/verify',
   'POST /api/pair/redeem'
 ]);
-const originsMatch = (a, b) => a.replace(/\/+$/, '') === b.replace(/\/+$/, '');
+function withoutTrailingSlashes(value) {
+  let end = value.length;
+  while (end > 0 && value.charCodeAt(end - 1) === 47) end--;
+  return value.slice(0, end);
+}
+const originsMatch = (a, b) => withoutTrailingSlashes(a) === withoutTrailingSlashes(b);
 function csrfOk(req, key) {
   if (req.method === 'GET' || req.method === 'HEAD' || req.method === 'OPTIONS') return true;
   if (CSRF_EXEMPT.has(key)) return true;
@@ -501,7 +506,10 @@ const PAIR_CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no 0/O/1/I —
 function makePairCode() {
   let code;
   do {
-    code = Array.from(crypto.randomBytes(8)).map(b => PAIR_CODE_ALPHABET[b % PAIR_CODE_ALPHABET.length]).join('');
+    code = Array.from(
+      { length: 8 },
+      () => PAIR_CODE_ALPHABET[crypto.randomInt(PAIR_CODE_ALPHABET.length)]
+    ).join('');
   } while (pairings.has(code));
   return code;
 }

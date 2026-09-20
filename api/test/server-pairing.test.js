@@ -59,7 +59,9 @@ test('logout/all invalidates the account\'s outstanding pairing codes and nobody
   const create = async (uid, sv) => {
     const r = await post('/api/pair/create', cookie(uid, sv));
     assert.equal(r.status, 200);
-    return (await r.json()).code;
+    const code = (await r.json()).code;
+    assert.match(code, /^[A-HJ-NP-Z2-9]{8}$/);
+    return code;
   };
   const redeem = code => post('/api/pair/redeem', {}, { code });
 
