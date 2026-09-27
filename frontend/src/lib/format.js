@@ -72,6 +72,18 @@ export function startOfWeek(iso, ws = MONDAY) {
  */
 export const weekKey = (iso, ws = MONDAY) => isoOf(startOfWeek(iso, ws))
 
+/** ISO-8601 week number (Monday-first, week 1 contains the year's first Thursday). */
+export function isoWeekNumber(date) {
+  // Work in UTC after copying only the local calendar fields. This keeps DST and the caller's
+  // time of day from moving a date into the neighbouring week.
+  const d = typeof date === 'string' ? new Date(date + 'T12:00:00') : date
+  const utc = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
+  const day = utc.getUTCDay() || 7
+  utc.setUTCDate(utc.getUTCDate() + 4 - day)
+  const yearStart = new Date(Date.UTC(utc.getUTCFullYear(), 0, 1))
+  return Math.ceil((((utc - yearStart) / 86400000) + 1) / 7)
+}
+
 export const localTZ = () => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC' } catch { return 'UTC' } }
 
 export const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7)

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { MONDAY, SUNDAY, weekStartOf, weekOrder, weekDayOffset, startOfWeek, weekKey, isoOf } from './format.js'
+import { MONDAY, SUNDAY, weekStartOf, weekOrder, weekDayOffset, startOfWeek, weekKey, isoOf, isoWeekNumber } from './format.js'
 import { streakWeeks } from './history.js'
 import { muscleBalanceWindow } from './muscles.js'
 import { effortWeeks } from './effort.js'
@@ -70,6 +70,24 @@ describe('weekKey', () => {
 
   it('does not collide across years', () => {
     expect(weekKey('2025-08-19', MONDAY)).not.toBe(weekKey('2026-08-19', MONDAY))
+  })
+})
+
+describe('isoWeekNumber', () => {
+  it('numbers the requested September week as ISO week 40', () => {
+    expect(isoWeekNumber('2026-09-28')).toBe(40)
+    expect(isoWeekNumber('2026-10-04')).toBe(40)
+  })
+
+  it('follows the ISO week-year across calendar-year boundaries', () => {
+    expect(isoWeekNumber('2025-12-29')).toBe(1)
+    expect(isoWeekNumber('2026-01-01')).toBe(1)
+    expect(isoWeekNumber('2027-01-03')).toBe(53)
+    expect(isoWeekNumber('2027-01-04')).toBe(1)
+  })
+
+  it('accepts a Date without its time or timezone changing the calendar day', () => {
+    expect(isoWeekNumber(new Date(2026, 8, 28, 23, 59))).toBe(40)
   })
 })
 
