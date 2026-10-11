@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-// #200: the Android app keeping Health Connect in step with the log. The native plugin
-// (HealthConnectPlugin.java) and the app's data directory are played in memory.
+// The native app keeping its platform health store in step with the log. The plugin and the
+// app's data directory are played in memory.
 const h = vi.hoisted(() => {
   vi.stubEnv('VITE_MOBILE', '1')
-  return { files: new Map(), calls: [], status: { status: 'available', granted: false }, grant: true, fail: null }
+  return { files: new Map(), calls: [], registered: [], platform: 'android', status: { status: 'available', granted: false }, grant: true, fail: null }
 })
 
 vi.mock('@capacitor/filesystem', () => ({
@@ -20,8 +20,10 @@ vi.mock('@capacitor/filesystem', () => ({
 }))
 vi.mock('@capacitor/app', () => ({ App: { addListener: () => ({ remove() {} }) } }))
 vi.mock('@capacitor/core', () => ({
-  Capacitor: { getPlatform: () => 'android' },
-  registerPlugin: () => ({
+  Capacitor: { getPlatform: () => h.platform },
+  registerPlugin: name => {
+    h.registered.push(name)
+    return ({
     status: async () => ({ ...h.status }),
     requestPermissions: async () => { h.calls.push(['request']); h.status.granted = h.grant; return { granted: h.grant } },
     write: async arg => {
@@ -30,7 +32,8 @@ vi.mock('@capacitor/core', () => ({
     },
     remove: async arg => { h.calls.push(['remove', arg]) },
     openSettings: async () => {},
-  }),
+    })
+  },
 }))
 
 const at = (d, hh) => new Date(2026, 8, d, hh).getTime()
@@ -44,8 +47,21 @@ const file = () => JSON.parse(h.files.get('opengym-health.json') || 'null')
 let hs
 beforeEach(async () => {
   vi.resetModules()
-  h.files.clear(); h.calls = []; h.status = { status: 'available', granted: false }; h.grant = true; h.fail = null
+  h.files.clear(); h.calls = []; h.registered = []; h.platform = 'android'; h.status = { status: 'available', granted: false }; h.grant = true; h.fail = null
   hs = await import('./health-sync.js')
+})
+
+describe('native health store', () => {
+  it('selects Health Connect on Android', async () => {
+    expect(await hs.healthStatus()).toEqual({ status: 'available', granted: false, kind: 'connect' })
+    expect(h.registered).toEqual(['HealthConnect'])
+  })
+
+  it('selects Apple Health on iOS', async () => {
+    h.platform = 'ios'
+    expect(await hs.healthStatus()).toEqual({ status: 'available', granted: false, kind: 'apple' })
+    expect(h.registered).toEqual(['AppleHealth'])
+  })
 })
 
 describe('off (the default)', () => {

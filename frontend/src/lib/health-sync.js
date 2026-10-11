@@ -1,4 +1,5 @@
-// Health Connect on the Android app (#200): turning it on, and keeping it in step with the log.
+// The phone health store: Health Connect on Android and Apple Health on iOS. Turning it on, and
+// keeping it in step with the log.
 // What gets written is worked out in lib/health-connect.js; this file owns the native plugin
 // (HealthConnectPlugin.java) and the phone's own record of what it wrote.
 //
@@ -6,8 +7,8 @@
 // data directory, never in S, so it does not sync to a server, ride in a backup, or switch on a
 // second phone. Off until the user turns it on; nothing is asked of Health Connect before that.
 //
-// The web build never gets here (MOBILE is a build-time flag), and iOS answers 'unsupported'.
-import { MOBILE, isAndroid, readJsonFile, writeJsonFile } from './mobile.js'
+// The web build never gets here (MOBILE is a build-time flag).
+import { MOBILE, readJsonFile, writeJsonFile } from './mobile.js'
 import { healthRecords, planSync, writtenIds } from './health-connect.js'
 import { exerciseNameFor } from './i18n-core.js'
 import { EXIDX } from './exercises.js'
@@ -20,9 +21,11 @@ const OFF = { on: false, written: {}, at: 0, error: null }
 // promise resolved with the bare proxy never settles.
 let pluginP = null
 const plugin = () => pluginP || (pluginP = (async () => {
-  if (!(await isAndroid())) return null
-  const { registerPlugin } = await import('@capacitor/core')
-  return { HC: registerPlugin('HealthConnect') }
+  const { Capacitor, registerPlugin } = await import('@capacitor/core')
+  const platform = Capacitor.getPlatform()
+  if (platform === 'android') return { HC: registerPlugin('HealthConnect'), kind: 'connect' }
+  if (platform === 'ios') return { HC: registerPlugin('AppleHealth'), kind: 'apple' }
+  return null
 })().catch(() => null))
 
 // The file's content, read once and then kept here: a save while it is off (the usual case) must
@@ -42,7 +45,7 @@ export async function healthStatus() {
   try {
     const p = await plugin()
     if (!p) return { status: 'unsupported', granted: false }
-    return await p.HC.status()
+    return { ...await p.HC.status(), kind: p.kind }
   } catch { return { status: 'unsupported', granted: false } }
 }
 

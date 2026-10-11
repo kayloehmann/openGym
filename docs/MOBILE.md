@@ -177,12 +177,13 @@ video autoplays muted in the Android WebView; a long video seeks from its `_capa
 URL on both platforms; an iPhone photo arrives as JPEG and an iPhone video (HEVC or H.264 MOV)
 plays; the zip export opens the share sheet.
 
-### Health Connect (Android)
+### Health stores (Android and iOS)
 
 Settings → **Health Connect** writes finished workouts and weigh-ins to Health Connect, Android's
 on-device store for health data, where other apps (Google Fit, Samsung Health, a smartwatch app…)
 can read them. It is off until the user turns it on, and nothing is asked of Health Connect before
-that.
+that. On iOS the corresponding **Apple Health** switch writes the same records through HealthKit;
+the feature is likewise write-only and opt-in.
 
 - **What is written:** each finished workout as an exercise session — its start and end, its name
   as the title, the exercises and sets as "Copy as text" writes them as the notes, and a type
@@ -213,10 +214,19 @@ that.
   Java-only. 1.1.0 stable needs compileSdk 36 and AGP 8.9.1, a toolchain bump left for its own
   change. The library asks for minSdk 26; `tools:overrideLibrary` keeps the app at 23 and the plugin
   checks the version before touching it.
+- **Apple Health:** `AppleHealthPlugin.swift` saves an `HKWorkout` (traditional strength training
+  for normal lifting) and body-mass samples. Stable HealthKit sync identifiers make edits and
+  deletes follow openGym. Apple Fitness may show the workout summary; Exercise-ring credit is
+  determined by Apple Watch activity sensing and is not guaranteed by the saved duration.
+  HealthKit has no standard strength-set/repetition schema, so the full exercise,
+  set and repetition text is kept as openGym metadata and remains visible in openGym; Fitness is
+  not expected to render those details. openGym does not invent heart rate or active calories.
 
 Worth checking on a real device after changes here: turning it on shows Health Connect's own
 permission screen; a finished workout appears in Health Connect within a few seconds; deleting it
 in openGym removes it there; turning it off with "remove" leaves no openGym record behind.
+On an iPhone, repeat the same check in Health and Fitness; HealthKit and activity-ring behavior
+cannot be validated completely in the simulator.
 
 ## Prerequisites
 
