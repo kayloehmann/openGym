@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import React, { act } from 'react'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createRoot } from 'react-dom/client'
 import { useStore } from './store/useStore.js'
 import { useUI } from './store/useUI.js'
@@ -32,6 +32,25 @@ describe('Calendar canonical workout days', () => {
   afterEach(() => {
     act(() => { mounted.splice(0).forEach(root => root.unmount()) })
     useStore.setState({ S: original })
+    vi.useRealTimers()
+  })
+
+  it('shows future dated sessions as planned while current and past overrides stay rescheduled', () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-09-16T12:00:00'))
+    useStore.setState({ S: {
+      ...original,
+      routines: [{ id: 'r1', name: 'Push', ex: [] }], week: {}, workouts: [],
+      dayPlan: { '2026-09-15': 'r1', '2026-09-16': 'r1', '2026-09-18': 'r1' },
+    } })
+
+    calendarSheet('2026-09-16')
+    const host = renderTop()
+    const dotFor = day => [...host.querySelectorAll('button.cal-d')]
+      .find(button => button.querySelector('span')?.textContent === String(day))?.querySelector('i')
+    expect(dotFor(15)?.className).toBe('ovr')
+    expect(dotFor(16)?.className).toBe('ovr')
+    expect(dotFor(18)?.className).toBe('plan')
   })
 
   it('keeps multiple legacy sessions on the heatmap fallback day clickable in Calendar', () => {

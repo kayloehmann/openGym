@@ -25,6 +25,10 @@ private data directory on every change (iOS is allowed to evict WebView storage 
 pressure — the file mirror is the durable copy and is restored on launch). Backups go out
 through the OS share sheet instead of a browser download.
 
+In the Home week strip and calendar, a workout assigned to a future date is shown as
+**Planned**, even when it overrides the recurring weekday plan. The **Rescheduled** marker
+is reserved for current or past date overrides; this changes the display, not saved plans.
+
 ### Connecting the app to your own server
 
 On first launch the app asks how you want to use it. Alongside the fully local mode above,
