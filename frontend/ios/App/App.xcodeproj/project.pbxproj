@@ -21,6 +21,7 @@
 		AA0200000000000000000002 /* AppleHealthPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0200000000000000000001 /* AppleHealthPlugin.swift */; };
 		AA0200000000000000000004 /* AppleHealthPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0200000000000000000003 /* AppleHealthPlugin.m */; };
 		AA0200000000000000000007 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA0200000000000000000006 /* HealthKit.framework */; };
+		AA0300000000000000000002 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0300000000000000000001 /* MainViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		AA0200000000000000000003 /* AppleHealthPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppleHealthPlugin.m; sourceTree = "<group>"; };
 		AA0200000000000000000005 /* App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = "<group>"; };
 		AA0200000000000000000006 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		AA0300000000000000000001 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		AF277DCFFFF123FFC6DF26C7 /* Pods_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF51FD2D460BCFE21FA515B2 /* Pods-App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.release.xcconfig"; path = "Pods/Target Support Files/Pods-App/Pods-App.release.xcconfig"; sourceTree = "<group>"; };
 		FC68EB0AF532CFC21C3344DD /* Pods-App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-App/Pods-App.debug.xcconfig"; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 				AA0200000000000000000001 /* AppleHealthPlugin.swift */,
 				AA0200000000000000000003 /* AppleHealthPlugin.m */,
 				AA0200000000000000000005 /* App.entitlements */,
+				AA0300000000000000000001 /* MainViewController.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
 				504EC30E1FED79650016851F /* Assets.xcassets */,
 				504EC3101FED79650016851F /* LaunchScreen.storyboard */,
@@ -236,6 +239,7 @@
 				AA0100000000000000000004 /* PrintPlugin.m in Sources */,
 				AA0200000000000000000002 /* AppleHealthPlugin.swift in Sources */,
 				AA0200000000000000000004 /* AppleHealthPlugin.m in Sources */,
+				AA0300000000000000000002 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

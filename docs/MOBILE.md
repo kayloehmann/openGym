@@ -221,6 +221,11 @@ the feature is likewise write-only and opt-in.
   HealthKit has no standard strength-set/repetition schema, so the full exercise,
   set and repetition text is kept as openGym metadata and remains visible in openGym; Fitness is
   not expected to render those details. openGym does not invent heart rate or active calories.
+- **iOS plugin registration:** `Main.storyboard` instantiates `MainViewController`, which explicitly
+  registers the local `AppleHealthPlugin` and `PrintPlugin` with Capacitor. Their Swift and Objective-C
+  files being compiled into the app is not enough: `cap sync` only lists package plugins in
+  `capacitor.config.json`. Keep this registration when changing the bridge controller. CI runs
+  `node frontend/scripts/check-ios-plugins.mjs` to detect missing or mismatched registrations.
 
 Worth checking on a real device after changes here: turning it on shows Health Connect's own
 permission screen; a finished workout appears in Health Connect within a few seconds; deleting it

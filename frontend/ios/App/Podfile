@@ -26,6 +26,11 @@ end
 
 post_install do |installer|
   assertDeploymentTarget(installer)
+  # Xcode 27 diagnoses quoted imports inside older pod framework headers as errors when
+  # this project-level warning is enabled. Keep the generated Pods project buildable.
+  installer.pods_project.build_configurations.each do |config|
+    config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'
+  end
   # assertDeploymentTarget only lifts a pod to 14.0, below what current Xcode supports, so every
   # build warned about the pods. Set them to the app's own target (the platform line above and
   # IPHONEOS_DEPLOYMENT_TARGET in the project, both 15.5), not to some lower number: a pod built
