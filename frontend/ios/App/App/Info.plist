@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>openGym</string>
+	<string>Kraftplan</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -25,7 +25,11 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Used to scan your gym membership QR code, and to take a photo or video of an exercise you add yourself.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>openGym writes workouts and weigh-ins you finish or edit to Apple Health.</string>
+	<string>Kraftplan writes workouts and weigh-ins you finish or edit to Apple Health.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Kraftplan does not read Apple Health data. Sync only writes workouts and weigh-ins after you enable it.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Used to record the sound of a video you take of an exercise you add yourself.</string>
 	<key>UIApplicationSceneManifest</key>

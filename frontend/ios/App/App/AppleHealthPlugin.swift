@@ -7,7 +7,7 @@ import UIKit
  * Write-only Apple Health bridge. The shared JavaScript sync planner decides which finished
  * workouts and weigh-ins changed; this plugin turns those plain records into HealthKit samples.
  * Every sample carries a stable sync identifier so edits replace the previous value and deletes
- * remove only data written by openGym.
+ * remove only data written by Kraftplan.
  */
 @objc(AppleHealthPlugin)
 public class AppleHealthPlugin: CAPPlugin {
@@ -110,7 +110,7 @@ public class AppleHealthPlugin: CAPPlugin {
         let start = Date(timeIntervalSince1970: try number(item, "start") / 1000)
         let end = Date(timeIntervalSince1970: try number(item, "end") / 1000)
         let metadata = baseMetadata(id: id, version: version).merging([
-            HKMetadataKeyWorkoutBrandName: "openGym",
+            HKMetadataKeyWorkoutBrandName: "Kraftplan",
             HKMetadataKeyIndoorWorkout: true,
             "ch.duartesantos.opengym.title": item["title"] as? String ?? "",
             "ch.duartesantos.opengym.notes": item["notes"] as? String ?? "",
