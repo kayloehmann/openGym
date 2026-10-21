@@ -35,3 +35,12 @@ export function videosFor(state, exerciseId) {
     return video && { ...video, title: typeof entry.title === 'string' ? entry.title.slice(0, 80) : '' }
   }).filter(Boolean)
 }
+
+// A Capacitor page has a capacitor:// origin. YouTube rejects embeds from that origin because
+// WebKit cannot send the HTTPS Referer YouTube now requires (player error 153). Phone builds can
+// therefore point at a tiny HTTPS wrapper on their own openGym server; the normal web app keeps
+// embedding YouTube directly. The wrapper base ends in `?id=` and only the validated video id
+// from parseYouTubeVideo is appended.
+export function exerciseVideoEmbed(video, wrapperBase = '') {
+  return wrapperBase ? wrapperBase + video.id : video.embed
+}

@@ -5,7 +5,9 @@ import { useStore } from '../store/useStore.js'
 import { t, exerciseNameFor } from '../lib/i18n.js'
 import Icon from './Icon.jsx'
 import CustomMedia, { CustomThumb } from './CustomMedia.jsx'
-import { videosFor } from '../lib/exercise-videos.js'
+import { exerciseVideoEmbed, videosFor } from '../lib/exercise-videos.js'
+
+const VIDEO_EMBED_BASE = import.meta.env?.VITE_VIDEO_EMBED_BASE || ''
 
 // An exercise's picture, wherever one shows. A custom exercise goes to CustomMedia.jsx — its own
 // photo, GIF, video or link, from the local media store — and never through imgSrc/gifSrc, which
@@ -54,7 +56,7 @@ function SavedVideos({ videos, compact, minimizable }) {
       {mini
         ? <div className="exmedia-video-mini"><VideoPoster key={selected.id} video={selected} /><span><Icon name="play" /> {t('Video paused')}</span></div>
         : playing
-          ? <iframe className="exmedia-video-frame" src={selected.embed} title={selected.title || t('Video {0}', index + 1)}
+          ? <iframe className="exmedia-video-frame" src={exerciseVideoEmbed(selected, MOBILE ? VIDEO_EMBED_BASE : '')} title={selected.title || t('Video {0}', index + 1)}
               loading="lazy" referrerPolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen />
           : <button type="button" className="exmedia-video-play" aria-label={t('Play video')} onClick={() => setPlaying(true)}>
               <VideoPoster key={selected.id} video={selected} />

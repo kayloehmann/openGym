@@ -256,8 +256,10 @@ npx cap open android        # opens Android Studio → run on emulator or device
 npx cap open ios            # opens Xcode (Mac only) → set your signing team, then run
 ```
 
-`npm run build:mobile` bakes the CDN media base into the bundle and copies the web build
-into both native projects — re-run it after every web-code change before building natively.
+`npm run build:mobile` uses `.env.mobile`, bakes the CDN media base and the HTTPS exercise-video
+wrapper into the bundle, and copies the web build into both native projects — re-run it after
+every web-code change before building natively. The wrapper is required because YouTube rejects
+an embed whose outer page has Capacitor's non-HTTP origin.
 
 > **Heads-up:** after `build:mobile`, `frontend/dist` contains the *mobile* bundle.
 > Run a plain `npm run build` again before deploying `dist` to a server.

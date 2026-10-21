@@ -20,7 +20,7 @@ const tree = (files) => {
 }
 const copy = (prefix, html, { sw = 'const CACHE = "og-1a2b3c"' } = {}) => ({
   [`${prefix}/index.html`]: html,
-  [`${prefix}/assets/index-BKpgfSzf.js`]: '',
+  [`${prefix}/assets/index-BKpgfSzf.js`]: 'const wrapper="https://gym.example/exercise-video.html?id="',
   [`${prefix}/assets/index-C_XIl0Rk.js`]: '',
   [`${prefix}/assets/index-x.css`]: '',
   [`${prefix}/sw.js`]: sw,
@@ -44,7 +44,16 @@ describe('check-mobile-bundle', () => {
   it('fails when index.html loads a chunk that is not there', () => {
     const files = copy('dist', MOBILE_HTML)
     delete files['dist/assets/index-BKpgfSzf.js']
-    expect(check(files)).toEqual(['dist/index.html loads assets/index-BKpgfSzf.js, which is missing'])
+    expect(check(files)).toEqual([
+      'dist has no configured HTTPS exercise-video wrapper',
+      'dist/index.html loads assets/index-BKpgfSzf.js, which is missing',
+    ])
+  })
+
+  it('fails when the mobile build has no HTTPS video wrapper', () => {
+    const files = copy('dist', MOBILE_HTML)
+    files['dist/assets/index-BKpgfSzf.js'] = ''
+    expect(check(files)).toContain('dist has no configured HTTPS exercise-video wrapper')
   })
 
   it('fails on an unstamped service worker', () => {

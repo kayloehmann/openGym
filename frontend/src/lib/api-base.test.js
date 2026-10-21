@@ -83,12 +83,13 @@ describe('the cache lifetime nginx gives an image', () => {
   })
 })
 
-// The exercise media are licensed for openGym only: Cross-Origin-Resource-Policy keeps another
-// site from embedding them, on every answer under /exercise-media/, at the site root and under a
-// BASE_PATH alike. An add_header in a block replaces the inherited ones, so the nested block
-// that sets the media's caching has to say it again.
+// The iOS shell is served from capacitor://localhost and loads the catalogue from the server.
+// WebKit therefore needs cross-origin CORP plus a CORS allow-list restricted to that app origin,
+// on every answer under /exercise-media/. An add_header in a block replaces the inherited ones,
+// so the nested block that sets the media's caching has to say both again.
 describe('the exercise media', () => {
-  const CORP = /\badd_header\s+Cross-Origin-Resource-Policy\s+"same-origin"\s+always\s*;/
+  const CORP = /\badd_header\s+Cross-Origin-Resource-Policy\s+"cross-origin"\s+always\s*;/
+  const CORS = /\badd_header\s+Access-Control-Allow-Origin\s+"capacitor:\/\/localhost"\s+always\s*;/
   for (const base of ['', '/gym']) {
     it(`are same-origin only${base ? ' under ' + base : ''}, files and anything else in the folder`, () => {
       const conf = render(base)
@@ -98,6 +99,7 @@ describe('the exercise media', () => {
       const nested = blocks[0], outer = blocks[1]
       for (const b of [outer, nested]) {
         expect(b).toMatch(CORP)
+        expect(b).toMatch(CORS)
         expect(b).toMatch(/\badd_header\s+X-Content-Type-Options\s+"nosniff"\s+always\s*;/)
         expect(b).toMatch(/\brewrite\s+\^\\Q/)
       }
@@ -174,14 +176,14 @@ describe('what nginx forwards to the API', () => {
 // to @root, and @root sent it back to /g+ym/, forever; the assets and images 404'd.
 describe('the file nginx looks for under BASE_PATH', () => {
   const REWRITE = /\brewrite\s+(\S+)\s+(\S+)\s+break\s*;/g
-  // All five rewrites (the app's prefix block, the two cache blocks, and the exercise media's
-  // block and its nested cache block) give the same answer.
+  // All six rewrites (the app's prefix block, the video-wrapper block, the two cache blocks, and
+  // the exercise media's block and its nested cache block) give the same answer.
   function onDisk(base, uri) {
     const got = [...render(base).matchAll(REWRITE)].map(([, pattern, to]) => {
       const m = new RegExp(quoted(pattern)).exec(uri)
       return m ? to.replace(/\$(\d)/g, (_, i) => m[i]) : uri
     })
-    expect(got.length).toBe(5)
+    expect(got.length).toBe(6)
     expect(new Set(got).size).toBe(1)
     return got[0]
   }

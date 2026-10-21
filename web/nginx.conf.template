@@ -130,6 +130,18 @@ server {
         return 302 ${BASE_PATH}/$is_args$args;
     }
 
+    # YouTube requires an HTTPS Referer for embedded playback. A Capacitor app itself has a
+    # capacitor:// origin, so the phone loads this same-server wrapper in-place; its nested
+    # YouTube player then carries this site's HTTPS origin. This one page may be framed only by
+    # the iOS shell and may itself frame only YouTube's privacy-enhanced host.
+    location = ${BASE_PATH}/exercise-video.html {
+        rewrite ^\Q${BASE_PATH}\E/(.*)$ /$1 break;
+        add_header Cache-Control "no-cache, must-revalidate";
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "origin" always;
+        add_header Content-Security-Policy "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; frame-src https://www.youtube-nocookie.com; frame-ancestors capacitor://localhost" always;
+    }
+
     # App shell: always revalidate so updates show up immediately
     location ~* \.(js|css|json|html)$ {
         # A regex location wins over the prefix block above, so it never saw its rewrite and
@@ -143,14 +155,15 @@ server {
     }
 
     # The exercise stills and animations, licensed from Gym visual for openGym only (NOTICE.md).
-    # Cross-Origin-Resource-Policy keeps another site from showing them in its own pages: the
-    # browser refuses a cross-origin <img> or <video> of them. The app loads them same-origin
-    # (the mobile app ships its own copy), so nothing of openGym's is affected. `^~` so this
+    # The iOS app loads these files on demand from its own capacitor://localhost origin. CORS is
+    # restricted to that origin; CORP must allow the cross-origin response for WebKit to use it.
+    # `^~` so this
     # prefix beats the image regex below; that one's caching is repeated in the nested block,
     # and so are the headers, since an add_header replaces the inherited set (see the top).
     location ^~ ${BASE_PATH}/exercise-media/ {
         rewrite ^\Q${BASE_PATH}\E/(.*)$ /$1 break;
-        add_header Cross-Origin-Resource-Policy "same-origin" always;
+        add_header Access-Control-Allow-Origin "capacitor://localhost" always;
+        add_header Cross-Origin-Resource-Policy "cross-origin" always;
         add_header X-Frame-Options "DENY" always;
         add_header X-Content-Type-Options "nosniff" always;
         add_header Referrer-Policy "same-origin" always;
@@ -158,7 +171,8 @@ server {
         location ~* \.(png|jpg|jpeg|gif|webp|avif|mp4)$ {
             rewrite ^\Q${BASE_PATH}\E/(.*)$ /$1 break;
             add_header Cache-Control "public, max-age=2592000, immutable";
-            add_header Cross-Origin-Resource-Policy "same-origin" always;
+            add_header Access-Control-Allow-Origin "capacitor://localhost" always;
+            add_header Cross-Origin-Resource-Policy "cross-origin" always;
             add_header X-Frame-Options "DENY" always;
             add_header X-Content-Type-Options "nosniff" always;
             add_header Referrer-Policy "same-origin" always;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseYouTubeVideo, videosFor } from './exercise-videos.js'
+import { exerciseVideoEmbed, parseYouTubeVideo, videosFor } from './exercise-videos.js'
 
 describe('YouTube exercise videos', () => {
   it('accepts regular, short and share links and returns a safe embed URL', () => {
@@ -35,5 +35,12 @@ describe('YouTube exercise videos', () => {
       { url: 'https://youtube.com/watch?v=M7lc1UVf-VE', title: 'Demo 2' },
     ] } }
     expect(videosFor(state, 'bench').map(v => v.title)).toEqual(['Demo 1', 'Demo 2'])
+  })
+
+  it('uses an HTTPS wrapper only when a phone build supplies one', () => {
+    const video = parseYouTubeVideo('https://youtu.be/dQw4w9WgXcQ')
+    expect(exerciseVideoEmbed(video)).toBe(video.embed)
+    expect(exerciseVideoEmbed(video, 'https://gym.example/exercise-video.html?id='))
+      .toBe('https://gym.example/exercise-video.html?id=dQw4w9WgXcQ')
   })
 })

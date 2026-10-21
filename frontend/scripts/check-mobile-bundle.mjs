@@ -7,6 +7,7 @@
  * opens the web app: no Android-only settings, a service worker, the passkey login screen. Each
  * copy is checked for
  *   - the flavour tag the mobile build writes into index.html (vite.config.js, `opengym-flavor`),
+ *   - the HTTPS video wrapper required when the outer page uses a capacitor:// origin,
  *   - every script and stylesheet index.html loads, present beside it,
  *   - a stamped service worker (no `__BUILD__` left in sw.js).
  *
@@ -28,6 +29,9 @@ export function checkCopy(dir) {
   const text = readFileSync(html, 'utf8')
   if (!/<meta\s+name="opengym-flavor"\s+content="mobile"/.test(text))
     problems.push(`${dir}/index.html is not the mobile build (no opengym-flavor meta) — another build ran into dist/?`)
+  const scripts = [...text.matchAll(/src="\.?\/?(assets\/[^"]+\.js)"/g)].map(([, ref]) => join(dir, ref))
+  if (scripts.every(file => !existsSync(file) || !readFileSync(file, 'utf8').includes('/exercise-video.html?id=')))
+    problems.push(`${dir} has no configured HTTPS exercise-video wrapper`)
   for (const [, ref] of text.matchAll(/(?:src|href)="\.?\/?(assets\/[^"]+\.(?:js|css))"/g))
     if (!existsSync(join(dir, ref))) problems.push(`${dir}/index.html loads ${ref}, which is missing`)
   const sw = join(dir, 'sw.js')
