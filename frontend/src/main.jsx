@@ -5,6 +5,8 @@ import { MOBILE } from './lib/mobile.js'
 import { useStore } from './store/useStore.js'
 import { startMediaSync } from './lib/media-sync.js'
 import { startNativeKeyboard } from './lib/native-keyboard.js'
+import { startWatchSync } from './lib/watch-sync.js'
+import { startNativeWorkoutSync } from './lib/native-workout.js'
 import './index.css'
 
 // App.jsx restores per-route scroll itself; the browser's own attempt races it.
@@ -21,6 +23,14 @@ startMediaSync(useStore)
 // Android 15 does not resize the page for the soft keyboard; the app says how much it covers and
 // this keeps the focused field above it. Idle everywhere else.
 startNativeKeyboard()
+
+// The native Apple Watch companion is a controller for this same store. It is inert on web and
+// Android, and drains durable WatchConnectivity events whenever the iPhone app is available.
+startWatchSync(useStore)
+
+// SwiftUI controls the current session on iPhone while the same canonical store keeps web,
+// Watch, HealthKit and the optional backend in sync.
+startNativeWorkoutSync(useStore)
 
 // Not in the mobile build: the native shell already serves everything from disk.
 if (!MOBILE && 'serviceWorker' in navigator && location.protocol === 'https:') {

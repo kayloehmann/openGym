@@ -9,7 +9,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true
 // The native health-store card: Health Connect on Android and Apple Health on iOS. It is off
 // until switched on, and turning it off asks what happens to what was already written.
 const mocks = vi.hoisted(() => {
-  const state = { S: null, MOBILE: true, android: true, status: { status: 'available', granted: false, kind: 'connect' }, health: { on: false, written: {}, error: null } }
+  const state = { S: null, MOBILE: true, android: true, status: { status: 'available', granted: false, kind: 'connect' }, health: { on: false, written: {}, error: null }, readiness: { on: false, snapshot: null, error: null } }
   state.snapshot = () => ({
     S: state.S, user: null, update: vi.fn(),
     replaceState: vi.fn(), setUser: vi.fn(), pullState: vi.fn(), pushState: vi.fn(),
@@ -18,6 +18,8 @@ const mocks = vi.hoisted(() => {
   state.enableHealth = vi.fn(async () => { state.health = { ...state.health, on: true }; return { ok: true, health: state.health } })
   state.disableHealth = vi.fn(async ({ removeWritten }) => { state.health = { ...state.health, on: false, written: removeWritten ? {} : state.health.written }; return state.health })
   state.openHealthConnect = vi.fn(async () => {})
+  state.enableHealthReadiness = vi.fn(async () => { state.readiness = { ...state.readiness, on: true }; return { ok: true, readiness: state.readiness } })
+  state.disableHealthReadiness = vi.fn(async () => { state.readiness = { on: false, snapshot: null, error: null }; return state.readiness })
   state.menuSheet = vi.fn()
   state.toast = vi.fn()
   return state
@@ -51,6 +53,12 @@ vi.mock('../lib/health-sync.js', () => ({
   openHealthConnect: (...a) => mocks.openHealthConnect(...a),
   onHealthChange: () => () => {},
 }))
+vi.mock('../lib/health-readiness.js', () => ({
+  loadHealthReadiness: () => Promise.resolve(mocks.readiness),
+  enableHealthReadiness: (...a) => mocks.enableHealthReadiness(...a),
+  disableHealthReadiness: (...a) => mocks.disableHealthReadiness(...a),
+  onHealthReadinessChange: () => () => {},
+}))
 vi.mock('./MobileOnboarding.jsx', () => ({ ConnectSheet: () => null }))
 vi.mock('../sheets.jsx', () => ({
   starterPlanSheet: vi.fn(), confirmSheet: vi.fn(), importFromApp: vi.fn(),
@@ -66,7 +74,8 @@ beforeEach(() => {
   mocks.android = true
   mocks.status = { status: 'available', granted: false, kind: 'connect' }
   mocks.health = { on: false, written: {}, error: null }
-  for (const k of ['enableHealth', 'disableHealth', 'openHealthConnect', 'menuSheet', 'toast']) mocks[k].mockClear()
+  mocks.readiness = { on: false, snapshot: null, error: null }
+  for (const k of ['enableHealth', 'disableHealth', 'openHealthConnect', 'enableHealthReadiness', 'disableHealthReadiness', 'menuSheet', 'toast']) mocks[k].mockClear()
   host = document.createElement('div')
   document.body.appendChild(host)
   root = createRoot(host)
@@ -106,6 +115,17 @@ describe('Settings — Health Connect', () => {
     await act(async () => { appleSwitch.click() })
     expect(mocks.enableHealth).toHaveBeenCalledTimes(1)
     expect(row('Settings')).toBeTruthy()
+  })
+
+  it('keeps Apple Health reading separate from workout writing', async () => {
+    mocks.android = false
+    mocks.status = { status: 'available', granted: false, kind: 'apple' }
+    await mount()
+    const readSwitch = row('Health signals for Today').querySelector('[role="switch"]')
+    await act(async () => { readSwitch.click() })
+    expect(mocks.enableHealthReadiness).toHaveBeenCalledTimes(1)
+    expect(mocks.enableHealth).not.toHaveBeenCalled()
+    expect(row('Apple Health').querySelector('[role="switch"]').getAttribute('aria-checked')).toBe('false')
   })
 
   it('starts off, and turning it on goes through enableHealth', async () => {

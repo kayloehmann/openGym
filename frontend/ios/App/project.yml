@@ -1,0 +1,118 @@
+name: App
+options:
+  bundleIdPrefix: com.kayloehmann
+  deploymentTarget:
+    iOS: "15.5"
+    watchOS: "10.0"
+settings:
+  base:
+    DEVELOPMENT_TEAM: LWSW9DX46P
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_VERSION: "5.0"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
+targets:
+  App:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+        includes:
+          - "*.swift"
+          - "*.m"
+      - path: App/public
+        type: folder
+        buildPhase: resources
+      - path: App/Assets.xcassets
+        buildPhase: resources
+      - path: App/Base.lproj/Main.storyboard
+        buildPhase: resources
+      - path: App/Base.lproj/LaunchScreen.storyboard
+        buildPhase: resources
+      - path: App/capacitor.config.json
+        buildPhase: resources
+      - path: App/config.xml
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.kayloehmann.opengym
+        PRODUCT_NAME: App
+        INFOPLIST_FILE: App/Info.plist
+        CODE_SIGN_ENTITLEMENTS: App/App.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CURRENT_PROJECT_VERSION: 2026111403
+        MARKETING_VERSION: 1.4.2
+    dependencies:
+      - sdk: HealthKit.framework
+      - target: Kraftplan Watch App
+        embed: true
+  Kraftplan Watch App:
+    # Xcode 27's SwiftUI watch app is a single executable target (no legacy WatchKit extension).
+    type: application
+    platform: watchOS
+    sources:
+      - WatchApp
+    info:
+      path: WatchApp/Info.plist
+      properties:
+        CFBundleDisplayName: Kraftplan
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: com.kayloehmann.opengym
+        NSHealthShareUsageDescription: Kraftplan zeichnet dein aktives Krafttraining auf.
+        NSHealthUpdateUsageDescription: Kraftplan speichert abgeschlossene Trainings in Apple Health.
+        WKBackgroundModes:
+          - workout-processing
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.kayloehmann.opengym.kraftplanwatch
+        PRODUCT_NAME: Kraftplan
+        CODE_SIGN_ENTITLEMENTS: WatchApp/WatchApp.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CURRENT_PROJECT_VERSION: 2026111403
+        MARKETING_VERSION: 1.4.2
+    dependencies:
+      - sdk: HealthKit.framework
+      - sdk: WatchConnectivity.framework
+      - target: Kraftplan Complication
+        embed: true
+  Kraftplan Complication:
+    type: app-extension
+    platform: watchOS
+    sources:
+      - WatchWidget
+    info:
+      path: WatchWidget/Info.plist
+      properties:
+        CFBundleDisplayName: Kraftplan
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.kayloehmann.opengym.kraftplanwatch.widget
+        PRODUCT_NAME: Kraftplan Complication
+        CODE_SIGN_ENTITLEMENTS: WatchWidget/WatchWidget.entitlements
+        CURRENT_PROJECT_VERSION: 2026111403
+        MARKETING_VERSION: 1.4.2
+    dependencies:
+      - sdk: WidgetKit.framework
+schemes:
+  App:
+    build:
+      targets:
+        App: all
+    run:
+      config: Debug
+    archive:
+      config: Release
+  Kraftplan Watch App:
+    build:
+      targets:
+        Kraftplan Watch App: all
+        Kraftplan Complication: all
+    run:
+      config: Debug

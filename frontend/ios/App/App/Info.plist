@@ -27,7 +27,7 @@
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Kraftplan writes workouts and weigh-ins you finish or edit to Apple Health.</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Kraftplan does not read Apple Health data. Sync only writes workouts and weigh-ins after you enable it.</string>
+	<string>Kraftplan can read sleep, HRV, resting heart rate, and respiratory rate after you enable Today insights. The data is used only on this iPhone for your training recommendation.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSMicrophoneUsageDescription</key>

@@ -1,7 +1,9 @@
 // Simplified Chinese UI strings. Keys are the English source strings (see lib/i18n.js).
 import { VIDEO_EN } from '../lib/video-locale.js'
+import { TODAY_EN } from '../lib/today-locale.js'
 export default {
   ...VIDEO_EN,
+  ...TODAY_EN,
   'Confirm': '确认',
   'Cancel': '取消',
   'Press back again to exit': '再按一次返回退出',

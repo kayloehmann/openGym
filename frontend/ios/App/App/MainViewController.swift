@@ -5,5 +5,7 @@ class MainViewController: CAPBridgeViewController {
         super.capacitorDidLoad()
         bridge?.registerPluginInstance(PrintPlugin())
         bridge?.registerPluginInstance(AppleHealthPlugin())
+        bridge?.registerPluginInstance(KraftplanWatchPlugin())
+        bridge?.registerPluginInstance(NativeWorkoutPlugin())
     }
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import { effectiveRoutines, effectiveRoutineIds, nextTrainingDay, streakWeeks, lastBW, setsDoneActive } from '../lib/history.js'
@@ -15,6 +15,8 @@ import { Button } from '../components/ui.jsx'
 import { tappable } from '../lib/use-sheet-keyboard.js'
 import { glyphOf } from '../lib/glyphs.js'
 import { dayNoteOf } from '../lib/day-notes.js'
+import { todayHealthSnapshot } from '../lib/health-readiness.js'
+import { todayGuidance } from '../lib/today-guidance.js'
 
 // Home = what to do now + a quick glance. Deep charts & history live in Stats.
 export default function Home() {
@@ -24,6 +26,20 @@ export default function Home() {
   // The banner switched off and the sync stuck: a dot on the gear (Settings → Show connection status).
   const trouble = useConnectionTrouble()
   const [weekOffset, setWeekOffset] = useState(0)
+  const [health, setHealth] = useState(null)
+  const checkKey = 'kraftplan-today-checkin-' + todayISO()
+  const [checkIn, setCheckIn] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(checkKey)) || null } catch { return null }
+  })
+  useEffect(() => {
+    let gone = false
+    todayHealthSnapshot().then(value => { if (!gone) setHealth(value) }).catch(() => {})
+    return () => { gone = true }
+  }, [])
+  const saveCheckIn = value => {
+    setCheckIn(value)
+    try { localStorage.setItem(checkKey, JSON.stringify(value)) } catch { /* private browsing */ }
+  }
 
   const today = new Date()
   // A weekday can hold several routines. `todayRoutines` is the whole day; `routine` is the
@@ -97,6 +113,17 @@ export default function Home() {
   // in a coach week, the queue's sessions and your own days together (lib/queue.js weekTally).
   const { done: doneThisWeek, planned: plannedPerWeek } = weekTally(S, todayISO())
   const bwPoints = S.bodyweight.slice(-30).map(b => ({ t: b.t || new Date(b.d).getTime(), y: b.w, d: b.d }))
+  const guidance = todayGuidance({ S, routines: todayRoutines, health, checkIn, week: { done: doneThisWeek, planned: plannedPerWeek } })
+  const guidanceLevel = S.active && !editingSaved ? 'active' : doneToday ? 'done' : guidance.level
+  const guidanceCopy = {
+    active: [t('Training in progress'), t('Continue where you left off.'), 'var(--orange)', 'play'],
+    done: [t('Training complete'), t('Today’s planned session is done.'), 'var(--green)', 'checkCircle'],
+    off: [t('Recovery day'), t('No session is planned today.'), 'var(--blue)', 'moon'],
+    ready: [t('Ready to train'), t('Your signals support the planned session.'), 'var(--green)', 'bolt'],
+    controlled: [t('Train with control'), t('Keep the plan, but leave a little more in reserve.'), 'var(--yellow)', 'shield'],
+    reduce: [t('Reduce today'), t('Shorten the session or lower the intensity.'), 'var(--orange)', 'arrowDown'],
+    rest: [t('Recovery first'), t('Pain or limited movement is a reason to pause and reassess.'), 'var(--red)', 'heart'],
+  }[guidanceLevel]
 
   // today's session shown right under the week strip
   const onToday = () => { if (S.active) nav('/workout'); else if (todayRoutines.length) startFlow(effectiveRoutineIds(S, todayISO())); else dayOverrideSheet(todayISO()) }
@@ -108,6 +135,48 @@ export default function Home() {
     <div className="hdr">
       <div><h1>{user ? t('Hi {0}', user.name) : 'openGym'}</h1><div className="sub">{today.toLocaleDateString(dateLocale(), { weekday: 'long', day: 'numeric', month: 'long' })}</div></div>
       <button className="iconbtn" onClick={() => nav('/settings')} aria-label={trouble ? t('Settings') + ', ' + t('Connection problem') : t('Settings')}><Icon name="gear" />{trouble && <span className="tab-dot" aria-hidden="true" />}</button>
+    </div>
+
+    <div className={'card today-hero ' + guidanceLevel}>
+      <div className="row between" style={{ alignItems: 'flex-start' }}>
+        <div>
+          <div className="lbl2">{t('TODAY’S TRAINING')}</div>
+          <div className="big" style={{ fontSize: 26, color: guidanceCopy[2], marginTop: 4 }}>{guidanceCopy[0]}</div>
+          <div className="muted small" style={{ marginTop: 5 }}>{guidanceCopy[1]}</div>
+        </div>
+        <span className="today-status-icon" style={{ color: guidanceCopy[2] }}><Icon name={guidanceCopy[3]} /></span>
+      </div>
+      {!!todayRoutines.length && <div className="today-preview">
+        <span>{todayName}</span>
+        <span>{tn('{0} exercise', '{0} exercises', guidance.preview.exercises)} · {tn('{0} set', '{0} sets', guidance.preview.sets)}</span>
+      </div>}
+      {health && <div className="today-local"><Icon name="lock" /> {t('{0} Apple Health signals · only on this iPhone', guidance.healthCoverage)}</div>}
+    </div>
+
+    <div className="card today-signals">
+      <h2>{t('What matters today')}</h2>
+      {guidance.signals.map(signal => <div className="today-signal" key={signal.key}>
+        <span className={'signal-dot ' + signal.tone} />
+        <div>
+          <div className="ttl">{signal.key === 'recovery' ? t('Target muscle recovery') : signal.key === 'sleep' ? t('Sleep') : signal.key === 'health' ? t('Recovery signals') : t('Weekly target')}</div>
+          <div className="small muted">{signal.key === 'recovery'
+            ? signal.tone === 'warn' ? t('Some target muscles still carry high training fatigue.') : signal.tone === 'care' ? t('Some target muscles are still recovering.') : t('The target muscles look ready.')
+            : signal.key === 'sleep' ? t('{0} hours last night', signal.value)
+            : signal.key === 'health' ? t('Compared with your personal baseline in Apple Health.')
+            : signal.planned ? t('{0} of {1} planned sessions done', signal.done, signal.planned) : t('{0} sessions done this week', signal.done)}</div>
+        </div>
+      </div>)}
+    </div>
+
+    <div className="card today-checkin">
+      <div className="row between"><h2>{t('10-second check-in')}</h2>{checkIn && <button className="linkbtn small" onClick={() => saveCheckIn(null)}>{t('Reset')}</button>}</div>
+      <CheckScale label={t('Energy')} value={checkIn?.energy} low={t('Low')} high={t('High')} onChange={energy => saveCheckIn({ energy, soreness: checkIn?.soreness || 3, pain: !!checkIn?.pain })} />
+      <CheckScale label={t('Soreness')} value={checkIn?.soreness} low={t('Low')} high={t('High')} onChange={soreness => saveCheckIn({ energy: checkIn?.energy || 3, soreness, pain: !!checkIn?.pain })} />
+      <button className={'pain-check' + (checkIn?.pain ? ' on' : '')} aria-pressed={!!checkIn?.pain}
+        onClick={() => saveCheckIn({ energy: checkIn?.energy || 3, soreness: checkIn?.soreness || 3, pain: !checkIn?.pain })}>
+        <Icon name={checkIn?.pain ? 'warning' : 'checkCircle'} /> {t('Pain or limited movement')}
+      </button>
+      <div className="small dim" style={{ marginTop: 9 }}>{t('Your plan is never changed automatically.')}</div>
     </div>
 
     <div className="card">
@@ -239,5 +308,12 @@ export default function Home() {
         <Icon name="calendar" className="chev" style={{ fontSize: 20 }} />
       </div>
     </div>
+  </div>
+}
+
+function CheckScale({ label, value, low, high, onChange }) {
+  return <div className="check-scale">
+    <div className="row between"><span className="small">{label}</span><span className="dim" style={{ fontSize: 11 }}>{low} — {high}</span></div>
+    <div className="check-buttons">{[1, 2, 3, 4, 5].map(n => <button key={n} className={value === n ? 'on' : ''} aria-label={`${label} ${n}`} onClick={() => onChange(n)}>{n}</button>)}</div>
   </div>
 }

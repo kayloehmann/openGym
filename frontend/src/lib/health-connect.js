@@ -84,7 +84,9 @@ function localMorning(iso) {
 export function healthRecords(S, { nameOf, speedUnit }) {
   const unit = S?.unit === 'lb' ? 'lb' : 'kg'
   return {
-    sessions: (S?.workouts || []).map(w => sessionRecord(w, { unit, nameOf, speedUnit })).filter(Boolean),
+    // Watch-origin workouts are written by the watch's live HKWorkoutSession. Writing them again
+    // from the phone would create two workouts in Apple Health.
+    sessions: (S?.workouts || []).filter(w => w?.healthSource !== 'watch').map(w => sessionRecord(w, { unit, nameOf, speedUnit })).filter(Boolean),
     weights: (S?.bodyweight || []).map(b => weightRecord(b, unit)).filter(Boolean),
   }
 }

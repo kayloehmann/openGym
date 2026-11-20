@@ -3,207 +3,398 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
-		50379B232058CBB4000EE86E /* capacitor.config.json in Resources */ = {isa = PBXBuildFile; fileRef = 50379B222058CBB4000EE86E /* capacitor.config.json */; };
-		504EC3081FED79650016851F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EC3071FED79650016851F /* AppDelegate.swift */; };
-		504EC30D1FED79650016851F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30B1FED79650016851F /* Main.storyboard */; };
-		504EC30F1FED79650016851F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30E1FED79650016851F /* Assets.xcassets */; };
-		504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC3101FED79650016851F /* LaunchScreen.storyboard */; };
-		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
-		A084ECDBA7D38E1E42DFC39D /* Pods_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF277DCFFFF123FFC6DF26C7 /* Pods_App.framework */; };
-		AA0000000000000000000002 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000001 /* SceneDelegate.swift */; };
-		AA0100000000000000000002 /* PrintPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0100000000000000000001 /* PrintPlugin.swift */; };
-		AA0100000000000000000004 /* PrintPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0100000000000000000003 /* PrintPlugin.m */; };
-		AA0200000000000000000002 /* AppleHealthPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0200000000000000000001 /* AppleHealthPlugin.swift */; };
-		AA0200000000000000000004 /* AppleHealthPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0200000000000000000003 /* AppleHealthPlugin.m */; };
-		AA0200000000000000000007 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA0200000000000000000006 /* HealthKit.framework */; };
-		AA0300000000000000000002 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0300000000000000000001 /* MainViewController.swift */; };
+		094459E03C9B6EDCC40EDAEA /* KraftplanWatchPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D1754323267DE9B72002E7 /* KraftplanWatchPlugin.m */; };
+		09DB1CF979B5A4C7E0238A56 /* Pods_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ED746F290293D71A7087BB8 /* Pods_App.framework */; };
+		1283073C087F5F5F19645D3A /* KraftplanWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 070BE71E41376B17F7860FA1 /* KraftplanWatchApp.swift */; };
+		130508067760194071FD7075 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3BEAD9B052ED5F0EE32AE1 /* Models.swift */; };
+		22CD399B84AAA2ACF7867A2C /* AppleHealthPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6572454433F546568ADEBC22 /* AppleHealthPlugin.swift */; };
+		26B947D8FF0EEF6FEDCFE567 /* KraftplanComplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B205FBF7B215DA2CAD9268 /* KraftplanComplication.swift */; };
+		2BFEEE6387CD5877C544A307 /* KraftplanWatchPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F5FAFC2D083593C52F747F /* KraftplanWatchPlugin.swift */; };
+		3FB3C8C0634A765EE81D042E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76989E05CECAD7B8B3C424A7 /* Assets.xcassets */; };
+		45F09DDF9FD286DA70CE44AE /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEE4A6C1FA03FD185A2C47E2 /* HealthKit.framework */; };
+		50B29B8D1C85F55948D98A1B /* Kraftplan Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = BED7996E4CDD66A09C27B4C1 /* Kraftplan Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		561A509D5DF0BEE7BB77B1F4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93C888C89BB3AC8AC93B282D /* LaunchScreen.storyboard */; };
+		5A3A5E8D22ED2E28E70B25FA /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEE4A6C1FA03FD185A2C47E2 /* HealthKit.framework */; };
+		5B73568EF7643D9CC689C593 /* NativeWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10D6549124CA54563AF695A /* NativeWorkoutView.swift */; };
+		5E04533C01261A377D816DB8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8776CD2CC1249496A6F18C86 /* config.xml */; };
+		67740B5377F807ABF1532F55 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2016878D44EAA9692D059F /* SceneDelegate.swift */; };
+		6ED03F272A76B4D0661AACF0 /* NativeWorkoutPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF16F85777A18D22A5F20CC /* NativeWorkoutPlugin.swift */; };
+		81138B00431411BE1EF97D97 /* capacitor.config.json in Resources */ = {isa = PBXBuildFile; fileRef = 68ED4E8FE0185474B6E8E85B /* capacitor.config.json */; };
+		82CDC623F09642D0A7545FCC /* PrintPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 14CA34792F646E7FBEEBE09D /* PrintPlugin.m */; };
+		8C7F73655D4E1084BA13F7A6 /* public in Resources */ = {isa = PBXBuildFile; fileRef = 4CD648EB22208AF4347378BB /* public */; };
+		8EBD59B3CDE6121D7D4BED25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3AF04BC9DE9D0D0BCCD9AF7E /* Assets.xcassets */; };
+		9E6C8371DCA974BA96B24A93 /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220DDC7EC9F3ADC63EA76853 /* Connectivity.swift */; };
+		AFABCB32ECB3CB54C7BF2386 /* NativeWorkoutPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD49A83216285A88FB02F00 /* NativeWorkoutPlugin.m */; };
+		C6463A09EE9CD86E6312F4F5 /* WorkoutSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92AE0F82F86237DE876B940 /* WorkoutSession.swift */; };
+		D98782B99CACAE209F932EC6 /* AppleHealthPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = EA2FA8D494D86B9C6C1138E0 /* AppleHealthPlugin.m */; };
+		DACE9B415066DA1FBE3EB75F /* WatchConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46D07B7DA65E09AB2ACB90BF /* WatchConnectivity.framework */; };
+		E8E03F4FB1BE61A377693A7C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9420949282AB92AA28A975D3 /* AppDelegate.swift */; };
+		EE5028C8611DDB77C8D08233 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7E94E5F9BD4A8A171DAB9F /* MainViewController.swift */; };
+		F07C367F53D4D2483795F3DA /* PrintPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7B8E7655B05A6C74CAED87 /* PrintPlugin.swift */; };
+		F2A2FAAE027EDBD37C4820BF /* Kraftplan Complication.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C8AB08A39FBB5026ADF2A39B /* Kraftplan Complication.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FCEC504BE9E88DFD2973764E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4821DE08C2AFA43AC8038FA3 /* Main.storyboard */; };
+		FF45ECC7AFB2262DA7819A08 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D8EBBE2CF5ED24C0AFBC831 /* WidgetKit.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		2B349B5E647131F6F2818AE8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6B590BF25178DC7D824D09CE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B499B0820516F48ADD730B0F;
+			remoteInfo = "Kraftplan Complication";
+		};
+		E70BE5151F34EB76DF5F6F22 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6B590BF25178DC7D824D09CE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4623AA8870D26DD839C330C7;
+			remoteInfo = "Kraftplan Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8FB70F68C37A7E71D356530E /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				50B29B8D1C85F55948D98A1B /* Kraftplan Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		930504040087D38C92767C67 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				F2A2FAAE027EDBD37C4820BF /* Kraftplan Complication.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		2FAD9762203C412B000D30F8 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
-		50379B222058CBB4000EE86E /* capacitor.config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
-		504EC3041FED79650016851F /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		504EC3071FED79650016851F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		504EC30C1FED79650016851F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		504EC30E1FED79650016851F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		504EC3111FED79650016851F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		504EC3131FED79650016851F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
-		AA0000000000000000000001 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		AA0100000000000000000001 /* PrintPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintPlugin.swift; sourceTree = "<group>"; };
-		AA0100000000000000000003 /* PrintPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrintPlugin.m; sourceTree = "<group>"; };
-		AA0200000000000000000001 /* AppleHealthPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleHealthPlugin.swift; sourceTree = "<group>"; };
-		AA0200000000000000000003 /* AppleHealthPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppleHealthPlugin.m; sourceTree = "<group>"; };
-		AA0200000000000000000005 /* App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = "<group>"; };
-		AA0200000000000000000006 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
-		AA0300000000000000000001 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		AF277DCFFFF123FFC6DF26C7 /* Pods_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AF51FD2D460BCFE21FA515B2 /* Pods-App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.release.xcconfig"; path = "Pods/Target Support Files/Pods-App/Pods-App.release.xcconfig"; sourceTree = "<group>"; };
-		FC68EB0AF532CFC21C3344DD /* Pods-App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-App/Pods-App.debug.xcconfig"; sourceTree = "<group>"; };
+		04B205FBF7B215DA2CAD9268 /* KraftplanComplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KraftplanComplication.swift; sourceTree = "<group>"; };
+		05F5FAFC2D083593C52F747F /* KraftplanWatchPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KraftplanWatchPlugin.swift; sourceTree = "<group>"; };
+		070BE71E41376B17F7860FA1 /* KraftplanWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KraftplanWatchApp.swift; sourceTree = "<group>"; };
+		0D8EBBE2CF5ED24C0AFBC831 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		14CA34792F646E7FBEEBE09D /* PrintPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrintPlugin.m; sourceTree = "<group>"; };
+		220DDC7EC9F3ADC63EA76853 /* Connectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
+		32ECF2981EC2578B00589259 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		3AF04BC9DE9D0D0BCCD9AF7E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3F7B8E7655B05A6C74CAED87 /* PrintPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintPlugin.swift; sourceTree = "<group>"; };
+		45D1754323267DE9B72002E7 /* KraftplanWatchPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KraftplanWatchPlugin.m; sourceTree = "<group>"; };
+		46D07B7DA65E09AB2ACB90BF /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = System/Library/Frameworks/WatchConnectivity.framework; sourceTree = SDKROOT; };
+		4821DE08C2AFA43AC8038FA3 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		49A8E69DA22F72E50C532DC1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		49D88A349FD70A9153DD2C03 /* App.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CD648EB22208AF4347378BB /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; name = public; path = App/public; sourceTree = SOURCE_ROOT; };
+		4ED746F290293D71A7087BB8 /* Pods_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C438C370709F960814AE9BC /* WatchWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WatchWidget.entitlements; sourceTree = "<group>"; };
+		5EF16F85777A18D22A5F20CC /* NativeWorkoutPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeWorkoutPlugin.swift; sourceTree = "<group>"; };
+		6572454433F546568ADEBC22 /* AppleHealthPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleHealthPlugin.swift; sourceTree = "<group>"; };
+		68ED4E8FE0185474B6E8E85B /* capacitor.config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
+		76989E05CECAD7B8B3C424A7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8776CD2CC1249496A6F18C86 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
+		93C888C89BB3AC8AC93B282D /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9420949282AB92AA28A975D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		98415C5104F52A283F406883 /* WatchApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WatchApp.entitlements; sourceTree = "<group>"; };
+		9B7E94E5F9BD4A8A171DAB9F /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		A404A36E2326D4487E76248E /* Pods-App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.debug.xcconfig"; path = "Target Support Files/Pods-App/Pods-App.debug.xcconfig"; sourceTree = "<group>"; };
+		ABD49A83216285A88FB02F00 /* NativeWorkoutPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NativeWorkoutPlugin.m; sourceTree = "<group>"; };
+		BED7996E4CDD66A09C27B4C1 /* Kraftplan Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kraftplan Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BEE4A6C1FA03FD185A2C47E2 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		BFF25C39878803B4638A8B31 /* Pods-App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.release.xcconfig"; path = "Target Support Files/Pods-App/Pods-App.release.xcconfig"; sourceTree = "<group>"; };
+		C10D6549124CA54563AF695A /* NativeWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeWorkoutView.swift; sourceTree = "<group>"; };
+		C8AB08A39FBB5026ADF2A39B /* Kraftplan Complication.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Kraftplan Complication.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE3BEAD9B052ED5F0EE32AE1 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		D92AE0F82F86237DE876B940 /* WorkoutSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSession.swift; sourceTree = "<group>"; };
+		EA2FA8D494D86B9C6C1138E0 /* AppleHealthPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppleHealthPlugin.m; sourceTree = "<group>"; };
+		ED2016878D44EAA9692D059F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		504EC3011FED79650016851F /* Frameworks */ = {
+		4D6441FDA424F50DCDB9483A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA0200000000000000000007 /* HealthKit.framework in Frameworks */,
-				A084ECDBA7D38E1E42DFC39D /* Pods_App.framework in Frameworks */,
+				5A3A5E8D22ED2E28E70B25FA /* HealthKit.framework in Frameworks */,
+				DACE9B415066DA1FBE3EB75F /* WatchConnectivity.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B767D3FA8F76EE594FB54295 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FF45ECC7AFB2262DA7819A08 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BC0DC3536DED64E0E8C9923E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45F09DDF9FD286DA70CE44AE /* HealthKit.framework in Frameworks */,
+				09DB1CF979B5A4C7E0238A56 /* Pods_App.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		27E2DDA53C4D2A4D1A88CE4A /* Frameworks */ = {
+		00563A9E2D265531C9C4C362 /* WatchApp */ = {
 			isa = PBXGroup;
 			children = (
-				AA0200000000000000000006 /* HealthKit.framework */,
-				AF277DCFFFF123FFC6DF26C7 /* Pods_App.framework */,
+				3AF04BC9DE9D0D0BCCD9AF7E /* Assets.xcassets */,
+				220DDC7EC9F3ADC63EA76853 /* Connectivity.swift */,
+				32ECF2981EC2578B00589259 /* Info.plist */,
+				070BE71E41376B17F7860FA1 /* KraftplanWatchApp.swift */,
+				CE3BEAD9B052ED5F0EE32AE1 /* Models.swift */,
+				98415C5104F52A283F406883 /* WatchApp.entitlements */,
+				D92AE0F82F86237DE876B940 /* WorkoutSession.swift */,
 			);
-			name = Frameworks;
+			path = WatchApp;
 			sourceTree = "<group>";
 		};
-		504EC2FB1FED79650016851F = {
+		2498AB6B57E9561DE3C68380 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				504EC3061FED79650016851F /* App */,
-				504EC3051FED79650016851F /* Products */,
-				7F8756D8B27F46E3366F6CEA /* Pods */,
-				27E2DDA53C4D2A4D1A88CE4A /* Frameworks */,
+				A404A36E2326D4487E76248E /* Pods-App.debug.xcconfig */,
+				BFF25C39878803B4638A8B31 /* Pods-App.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		4102E3E068508DD683953C7D = {
+			isa = PBXGroup;
+			children = (
+				4CD648EB22208AF4347378BB /* public */,
+				443E9F32F0EC65EEBF466F3B /* App */,
+				8082EA8F345256DFAADCE10A /* Base.lproj */,
+				00563A9E2D265531C9C4C362 /* WatchApp */,
+				FC143FF3BA8371E33B83B8D1 /* WatchWidget */,
+				BDD1182E50DC622819F25364 /* Frameworks */,
+				E9C3DB3EC6D7655028A9C0D3 /* Products */,
+				2498AB6B57E9561DE3C68380 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
-		504EC3051FED79650016851F /* Products */ = {
+		443E9F32F0EC65EEBF466F3B /* App */ = {
 			isa = PBXGroup;
 			children = (
-				504EC3041FED79650016851F /* App.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		504EC3061FED79650016851F /* App */ = {
-			isa = PBXGroup;
-			children = (
-				50379B222058CBB4000EE86E /* capacitor.config.json */,
-				504EC3071FED79650016851F /* AppDelegate.swift */,
-				AA0000000000000000000001 /* SceneDelegate.swift */,
-				AA0100000000000000000001 /* PrintPlugin.swift */,
-				AA0100000000000000000003 /* PrintPlugin.m */,
-				AA0200000000000000000001 /* AppleHealthPlugin.swift */,
-				AA0200000000000000000003 /* AppleHealthPlugin.m */,
-				AA0200000000000000000005 /* App.entitlements */,
-				AA0300000000000000000001 /* MainViewController.swift */,
-				504EC30B1FED79650016851F /* Main.storyboard */,
-				504EC30E1FED79650016851F /* Assets.xcassets */,
-				504EC3101FED79650016851F /* LaunchScreen.storyboard */,
-				504EC3131FED79650016851F /* Info.plist */,
-				2FAD9762203C412B000D30F8 /* config.xml */,
-				50B271D01FEDC1A000F3C39B /* public */,
+				9420949282AB92AA28A975D3 /* AppDelegate.swift */,
+				EA2FA8D494D86B9C6C1138E0 /* AppleHealthPlugin.m */,
+				6572454433F546568ADEBC22 /* AppleHealthPlugin.swift */,
+				76989E05CECAD7B8B3C424A7 /* Assets.xcassets */,
+				68ED4E8FE0185474B6E8E85B /* capacitor.config.json */,
+				8776CD2CC1249496A6F18C86 /* config.xml */,
+				45D1754323267DE9B72002E7 /* KraftplanWatchPlugin.m */,
+				05F5FAFC2D083593C52F747F /* KraftplanWatchPlugin.swift */,
+				9B7E94E5F9BD4A8A171DAB9F /* MainViewController.swift */,
+				ABD49A83216285A88FB02F00 /* NativeWorkoutPlugin.m */,
+				5EF16F85777A18D22A5F20CC /* NativeWorkoutPlugin.swift */,
+				C10D6549124CA54563AF695A /* NativeWorkoutView.swift */,
+				14CA34792F646E7FBEEBE09D /* PrintPlugin.m */,
+				3F7B8E7655B05A6C74CAED87 /* PrintPlugin.swift */,
+				ED2016878D44EAA9692D059F /* SceneDelegate.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
 		};
-		7F8756D8B27F46E3366F6CEA /* Pods */ = {
+		8082EA8F345256DFAADCE10A /* Base.lproj */ = {
 			isa = PBXGroup;
 			children = (
-				FC68EB0AF532CFC21C3344DD /* Pods-App.debug.xcconfig */,
-				AF51FD2D460BCFE21FA515B2 /* Pods-App.release.xcconfig */,
+				93C888C89BB3AC8AC93B282D /* LaunchScreen.storyboard */,
+				4821DE08C2AFA43AC8038FA3 /* Main.storyboard */,
 			);
-			name = Pods;
+			name = Base.lproj;
+			path = App/Base.lproj;
+			sourceTree = "<group>";
+		};
+		BDD1182E50DC622819F25364 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BEE4A6C1FA03FD185A2C47E2 /* HealthKit.framework */,
+				46D07B7DA65E09AB2ACB90BF /* WatchConnectivity.framework */,
+				0D8EBBE2CF5ED24C0AFBC831 /* WidgetKit.framework */,
+				4ED746F290293D71A7087BB8 /* Pods_App.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E9C3DB3EC6D7655028A9C0D3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				49D88A349FD70A9153DD2C03 /* App.app */,
+				C8AB08A39FBB5026ADF2A39B /* Kraftplan Complication.appex */,
+				BED7996E4CDD66A09C27B4C1 /* Kraftplan Watch App.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FC143FF3BA8371E33B83B8D1 /* WatchWidget */ = {
+			isa = PBXGroup;
+			children = (
+				49A8E69DA22F72E50C532DC1 /* Info.plist */,
+				04B205FBF7B215DA2CAD9268 /* KraftplanComplication.swift */,
+				5C438C370709F960814AE9BC /* WatchWidget.entitlements */,
+			);
+			path = WatchWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		504EC3031FED79650016851F /* App */ = {
+		4623AA8870D26DD839C330C7 /* Kraftplan Watch App */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 504EC3161FED79650016851F /* Build configuration list for PBXNativeTarget "App" */;
+			buildConfigurationList = 7B9A1BD481A9F66F4A9B6BDE /* Build configuration list for PBXNativeTarget "Kraftplan Watch App" */;
 			buildPhases = (
-				6634F4EFEBD30273BCE97C65 /* [CP] Check Pods Manifest.lock */,
-				504EC3001FED79650016851F /* Sources */,
-				504EC3011FED79650016851F /* Frameworks */,
-				504EC3021FED79650016851F /* Resources */,
-				9592DBEFFC6D2A0C8D5DEB22 /* [CP] Embed Pods Frameworks */,
+				EB26D45846CC9FF66F1DABE8 /* Sources */,
+				4E4D3B653575D8AD0F9F1841 /* Resources */,
+				4D6441FDA424F50DCDB9483A /* Frameworks */,
+				930504040087D38C92767C67 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8E4D2A5A841972A02BC412BF /* PBXTargetDependency */,
+			);
+			name = "Kraftplan Watch App";
+			productName = "Kraftplan Watch App";
+			productReference = BED7996E4CDD66A09C27B4C1 /* Kraftplan Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		93E9E330FC2CE7458D9C925F /* App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FFC1863BD4026D2C17CBE82B /* Build configuration list for PBXNativeTarget "App" */;
+			buildPhases = (
+				0383BE723B197E3425298151 /* [CP] Check Pods Manifest.lock */,
+				B77F0AF073564580D75A2CF1 /* Sources */,
+				37BFF6A8CB5CC7FA21AD3FA3 /* Resources */,
+				BC0DC3536DED64E0E8C9923E /* Frameworks */,
+				8FB70F68C37A7E71D356530E /* Embed Watch Content */,
+				774D44CEED1BA526B6E29FA2 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9F0A5A09ADD34E261D16693A /* PBXTargetDependency */,
+			);
+			name = App;
+			productName = App;
+			productReference = 49D88A349FD70A9153DD2C03 /* App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B499B0820516F48ADD730B0F /* Kraftplan Complication */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27A9A2CD97A9E380DE23A547 /* Build configuration list for PBXNativeTarget "Kraftplan Complication" */;
+			buildPhases = (
+				76139B70D7558D9AD58F7CCC /* Sources */,
+				B767D3FA8F76EE594FB54295 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = App;
-			productName = App;
-			productReference = 504EC3041FED79650016851F /* App.app */;
-			productType = "com.apple.product-type.application";
+			name = "Kraftplan Complication";
+			productName = "Kraftplan Complication";
+			productReference = C8AB08A39FBB5026ADF2A39B /* Kraftplan Complication.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		504EC2FC1FED79650016851F /* Project object */ = {
+		6B590BF25178DC7D824D09CE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 920;
-				LastUpgradeCheck = 2710;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
-					504EC3031FED79650016851F = {
-						CreatedOnToolsVersion = 9.2;
-						LastSwiftMigration = 1100;
+					4623AA8870D26DD839C330C7 = {
+						DevelopmentTeam = LWSW9DX46P;
+						ProvisioningStyle = Automatic;
+					};
+					93E9E330FC2CE7458D9C925F = {
+						DevelopmentTeam = LWSW9DX46P;
+						ProvisioningStyle = Automatic;
+					};
+					B499B0820516F48ADD730B0F = {
+						DevelopmentTeam = LWSW9DX46P;
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
-			buildConfigurationList = 504EC2FF1FED79650016851F /* Build configuration list for PBXProject "App" */;
-			compatibilityVersion = "Xcode 8.0";
+			buildConfigurationList = B3FD05C59F197F398A0B04AB /* Build configuration list for PBXProject "App" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				en,
 			);
-			mainGroup = 504EC2FB1FED79650016851F;
-			packageReferences = (
-			);
-			productRefGroup = 504EC3051FED79650016851F /* Products */;
+			mainGroup = 4102E3E068508DD683953C7D;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = E9C3DB3EC6D7655028A9C0D3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				504EC3031FED79650016851F /* App */,
+				93E9E330FC2CE7458D9C925F /* App */,
+				4623AA8870D26DD839C330C7 /* Kraftplan Watch App */,
+				B499B0820516F48ADD730B0F /* Kraftplan Complication */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		504EC3021FED79650016851F /* Resources */ = {
+		37BFF6A8CB5CC7FA21AD3FA3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */,
-				50B271D11FEDC1A000F3C39B /* public in Resources */,
-				504EC30F1FED79650016851F /* Assets.xcassets in Resources */,
-				50379B232058CBB4000EE86E /* capacitor.config.json in Resources */,
-				504EC30D1FED79650016851F /* Main.storyboard in Resources */,
-				2FAD9763203C412B000D30F8 /* config.xml in Resources */,
+				3FB3C8C0634A765EE81D042E /* Assets.xcassets in Resources */,
+				561A509D5DF0BEE7BB77B1F4 /* LaunchScreen.storyboard in Resources */,
+				FCEC504BE9E88DFD2973764E /* Main.storyboard in Resources */,
+				81138B00431411BE1EF97D97 /* capacitor.config.json in Resources */,
+				5E04533C01261A377D816DB8 /* config.xml in Resources */,
+				8C7F73655D4E1084BA13F7A6 /* public in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4E4D3B653575D8AD0F9F1841 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8EBD59B3CDE6121D7D4BED25 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		6634F4EFEBD30273BCE97C65 /* [CP] Check Pods Manifest.lock */ = {
+		0383BE723B197E3425298151 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-App-checkManifestLockResult.txt",
 			);
@@ -212,15 +403,15 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9592DBEFFC6D2A0C8D5DEB22 /* [CP] Embed Pods Frameworks */ = {
+		774D44CEED1BA526B6E29FA2 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
+			inputFileListPaths = (
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
+			outputFileListPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -230,116 +421,92 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		504EC3001FED79650016851F /* Sources */ = {
+		76139B70D7558D9AD58F7CCC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
-				AA0000000000000000000002 /* SceneDelegate.swift in Sources */,
-				AA0100000000000000000002 /* PrintPlugin.swift in Sources */,
-				AA0100000000000000000004 /* PrintPlugin.m in Sources */,
-				AA0200000000000000000002 /* AppleHealthPlugin.swift in Sources */,
-				AA0200000000000000000004 /* AppleHealthPlugin.m in Sources */,
-				AA0300000000000000000002 /* MainViewController.swift in Sources */,
+				26B947D8FF0EEF6FEDCFE567 /* KraftplanComplication.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B77F0AF073564580D75A2CF1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E8E03F4FB1BE61A377693A7C /* AppDelegate.swift in Sources */,
+				D98782B99CACAE209F932EC6 /* AppleHealthPlugin.m in Sources */,
+				22CD399B84AAA2ACF7867A2C /* AppleHealthPlugin.swift in Sources */,
+				094459E03C9B6EDCC40EDAEA /* KraftplanWatchPlugin.m in Sources */,
+				2BFEEE6387CD5877C544A307 /* KraftplanWatchPlugin.swift in Sources */,
+				EE5028C8611DDB77C8D08233 /* MainViewController.swift in Sources */,
+				AFABCB32ECB3CB54C7BF2386 /* NativeWorkoutPlugin.m in Sources */,
+				6ED03F272A76B4D0661AACF0 /* NativeWorkoutPlugin.swift in Sources */,
+				5B73568EF7643D9CC689C593 /* NativeWorkoutView.swift in Sources */,
+				82CDC623F09642D0A7545FCC /* PrintPlugin.m in Sources */,
+				F07C367F53D4D2483795F3DA /* PrintPlugin.swift in Sources */,
+				67740B5377F807ABF1532F55 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EB26D45846CC9FF66F1DABE8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E6C8371DCA974BA96B24A93 /* Connectivity.swift in Sources */,
+				1283073C087F5F5F19645D3A /* KraftplanWatchApp.swift in Sources */,
+				130508067760194071FD7075 /* Models.swift in Sources */,
+				C6463A09EE9CD86E6312F4F5 /* WorkoutSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXVariantGroup section */
-		504EC30B1FED79650016851F /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				504EC30C1FED79650016851F /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
+/* Begin PBXTargetDependency section */
+		8E4D2A5A841972A02BC412BF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B499B0820516F48ADD730B0F /* Kraftplan Complication */;
+			targetProxy = 2B349B5E647131F6F2818AE8 /* PBXContainerItemProxy */;
 		};
-		504EC3101FED79650016851F /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				504EC3111FED79650016851F /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
+		9F0A5A09ADD34E261D16693A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4623AA8870D26DD839C330C7 /* Kraftplan Watch App */;
+			targetProxy = E70BE5151F34EB76DF5F6F22 /* PBXContainerItemProxy */;
 		};
-/* End PBXVariantGroup section */
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		504EC3141FED79650016851F /* Debug */ = {
+		4A0C935808978B5A7673E412 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A404A36E2326D4487E76248E /* Pods-App.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
+				CURRENT_PROJECT_VERSION = 2026111403;
+				INFOPLIST_FILE = App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
+					"@executable_path/Frameworks",
 				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				MARKETING_VERSION = 1.4.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kayloehmann.opengym;
+				PRODUCT_NAME = App;
 				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		504EC3151FED79650016851F /* Release */ = {
+		5C9EF0E6AF4F9491454DE177 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -355,16 +522,17 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = LWSW9DX46P;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -378,85 +546,214 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				VALIDATE_PRODUCT = YES;
+				SWIFT_VERSION = 5.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Release;
 		};
-		504EC3171FED79650016851F /* Debug */ = {
+		87396A2601FFB068F9413545 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FC68EB0AF532CFC21C3344DD /* Pods-App.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LWSW9DX46P;
-				INFOPLIST_FILE = App/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-DDEBUG\"";
-				PRODUCT_BUNDLE_IDENTIFIER = com.kayloehmann.opengym;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				CODE_SIGN_ENTITLEMENTS = WatchApp/WatchApp.entitlements;
+				CURRENT_PROJECT_VERSION = 2026111403;
+				INFOPLIST_FILE = WatchApp/Info.plist;
+				MARKETING_VERSION = 1.4.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kayloehmann.opengym.kraftplanwatch;
+				PRODUCT_NAME = Kraftplan;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
 			};
 			name = Debug;
 		};
-		504EC3181FED79650016851F /* Release */ = {
+		C73E645D18B596EA89797AC9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AF51FD2D460BCFE21FA515B2 /* Pods-App.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = WatchWidget/WatchWidget.entitlements;
+				CURRENT_PROJECT_VERSION = 2026111403;
+				INFOPLIST_FILE = WatchWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.4.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kayloehmann.opengym.kraftplanwatch.widget;
+				PRODUCT_NAME = "Kraftplan Complication";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Release;
+		};
+		EB1CC3A930E09FEBECF9195D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BFF25C39878803B4638A8B31 /* Pods-App.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LWSW9DX46P;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 2026111403;
 				INFOPLIST_FILE = App/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kayloehmann.opengym;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
-				SWIFT_VERSION = 5.0;
+				PRODUCT_NAME = App;
+				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
+		};
+		F504797F38B38D5F05242250 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WatchApp/WatchApp.entitlements;
+				CURRENT_PROJECT_VERSION = 2026111403;
+				INFOPLIST_FILE = WatchApp/Info.plist;
+				MARKETING_VERSION = 1.4.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kayloehmann.opengym.kraftplanwatch;
+				PRODUCT_NAME = Kraftplan;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Release;
+		};
+		F61063B78755D98B1B9C3697 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = LWSW9DX46P;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		FC3B5F62B17EE3E8F92B75F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = WatchWidget/WatchWidget.entitlements;
+				CURRENT_PROJECT_VERSION = 2026111403;
+				INFOPLIST_FILE = WatchWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.4.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kayloehmann.opengym.kraftplanwatch.widget;
+				PRODUCT_NAME = "Kraftplan Complication";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		504EC2FF1FED79650016851F /* Build configuration list for PBXProject "App" */ = {
+		27A9A2CD97A9E380DE23A547 /* Build configuration list for PBXNativeTarget "Kraftplan Complication" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				504EC3141FED79650016851F /* Debug */,
-				504EC3151FED79650016851F /* Release */,
+				FC3B5F62B17EE3E8F92B75F4 /* Debug */,
+				C73E645D18B596EA89797AC9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
-		504EC3161FED79650016851F /* Build configuration list for PBXNativeTarget "App" */ = {
+		7B9A1BD481A9F66F4A9B6BDE /* Build configuration list for PBXNativeTarget "Kraftplan Watch App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				504EC3171FED79650016851F /* Debug */,
-				504EC3181FED79650016851F /* Release */,
+				87396A2601FFB068F9413545 /* Debug */,
+				F504797F38B38D5F05242250 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
+		};
+		B3FD05C59F197F398A0B04AB /* Build configuration list for PBXProject "App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F61063B78755D98B1B9C3697 /* Debug */,
+				5C9EF0E6AF4F9491454DE177 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FFC1863BD4026D2C17CBE82B /* Build configuration list for PBXNativeTarget "App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A0C935808978B5A7673E412 /* Debug */,
+				EB1CC3A930E09FEBECF9195D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 504EC2FC1FED79650016851F /* Project object */;
+	rootObject = 6B590BF25178DC7D824D09CE /* Project object */;
 }

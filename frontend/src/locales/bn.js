@@ -1,7 +1,9 @@
 // Bengali UI strings. Keys are the English source strings (see lib/i18n.js).
 import { VIDEO_EN } from '../lib/video-locale.js'
+import { TODAY_EN } from '../lib/today-locale.js'
 export default {
   ...VIDEO_EN,
+  ...TODAY_EN,
   'Confirm': 'নিশ্চিত করুন',
   'Cancel': 'বাতিল',
   'Press back again to exit': 'বের হতে আবার ব্যাক চাপুন',

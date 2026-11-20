@@ -86,6 +86,10 @@ describe('healthRecords', () => {
   it('copes with a state that has neither', () => {
     expect(healthRecords({}, { nameOf })).toEqual({ sessions: [], weights: [] })
   })
+  it('does not duplicate a workout that the Watch already wrote to HealthKit', () => {
+    const S = { unit: 'kg', workouts: [workout([strength], { healthSource: 'watch' })], bodyweight: [] }
+    expect(healthRecords(S, { nameOf }).sessions).toEqual([])
+  })
 })
 
 describe('planSync', () => {

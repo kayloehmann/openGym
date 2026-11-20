@@ -1,7 +1,9 @@
 // Hungarian UI strings. Keys are the English source strings (see lib/i18n.js).
 import { VIDEO_EN } from '../lib/video-locale.js'
+import { TODAY_EN } from '../lib/today-locale.js'
 export default {
   ...VIDEO_EN,
+  ...TODAY_EN,
   // --- generic ---
   'Confirm': 'Megerősítés',
   'Cancel': 'Mégse',

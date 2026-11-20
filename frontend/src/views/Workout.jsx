@@ -46,6 +46,7 @@ import { nextOpenSet, workoutKeyAction } from '../lib/workout-keys.js'
 import { MUSCLE_NAME } from '../lib/muscles.js'
 import FocusView from './FocusView.jsx'
 import { withMeaning, historyAs, dbLoadFor, entryDbLoad, bellsIn, ownedWeightsFor, stepOwned } from '../lib/dumbbells.js'
+import { nativeWorkoutAvailable, openNativeWorkout } from '../lib/native-workout.js'
 
 // How long after a key starts a hold the same key is not yet its "Done" (#133). A USB button
 // that bounces, or a double press, sends two presses a moment apart: the first starts the hold,
@@ -1428,6 +1429,8 @@ function ActiveWorkout() {
   const openViewMenu = () => menuSheet({
     sections: [
       { items: [
+        nativeWorkoutAvailable() && !editing && !A.backfill && { icon: 'figureStrength', accent: true, label: t('Open native workout view'),
+          sub: t('Optimized for training on iPhone'), onClick: () => openNativeWorkout(useStore.getState().S) },
         { icon: 'gear', accent: true, chevron: true, label: t('Workout settings'),
           sub: [S.restSec > 0 ? t('{0} rest', fmtRest(S.restSec)) : t('No rest timer'), S.sound ? t('Sound') : t('Silent')].join(' · '),
           onClick: workoutSettingsSheet },

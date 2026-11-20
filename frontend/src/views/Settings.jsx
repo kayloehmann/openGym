@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, forwardRef, useSyncExternalStore } from 'r
 import { useNavigate, useParams, useLocation, Navigate } from 'react-router-dom'
 import { useStore, DEF, hasData } from '../store/useStore.js'
 import { healthStatus, loadHealth, enableHealth, disableHealth, openHealthConnect, onHealthChange } from '../lib/health-sync.js'
+import { loadHealthReadiness, enableHealthReadiness, disableHealthReadiness, onHealthReadinessChange } from '../lib/health-readiness.js'
 import { workoutControls } from '../lib/workout-controls.js'
 import { speedUnitOf } from '../lib/speed.js'
 import { formulaOf, FORMULA_NAMES } from '../lib/onerm.js'
@@ -1434,20 +1435,22 @@ function RegisterInline({ close, setUser, pushState, pullState, toast }) {
 }
 
 // Native app: writing finished workouts and weigh-ins to Health Connect on Android or Apple
-// Health on iOS. A fact about this phone, kept in its own file (lib/health-sync.js) and not in S,
-// so it never switches on anywhere else. The card stays out of the way when the platform store
-// is unavailable.
+// Health on iOS. Writing and Today reads are separate opt-ins, each kept in its own device-local
+// file (lib/health-sync.js / lib/health-readiness.js), never in S, so neither switches on anywhere
+// else. The card stays out of the way when the platform store is unavailable.
 function HealthConnectCard({ S, toast }) {
   const [st, setSt] = useState(null)
   const [h, setH] = useState(null)
+  const [readiness, setReadiness] = useState(null)
   const [busy, setBusy] = useState(false)
   useEffect(() => {
     let gone = false
-    Promise.all([healthStatus(), loadHealth()]).then(([s, f]) => { if (!gone) { setSt(s); setH(f) } }).catch(() => {})
+    Promise.all([healthStatus(), loadHealth(), loadHealthReadiness()]).then(([s, f, r]) => { if (!gone) { setSt(s); setH(f); setReadiness(r) } }).catch(() => {})
     const off = onHealthChange(f => { if (!gone) setH(f) })
-    return () => { gone = true; off() }
+    const offReadiness = onHealthReadinessChange(f => { if (!gone) setReadiness(f) })
+    return () => { gone = true; off(); offReadiness() }
   }, [])
-  if (!st || !h || st.status === 'unsupported') return null
+  if (!st || !h || !readiness || st.status === 'unsupported') return null
   const apple = st.kind === 'apple'
   const brand = apple ? 'Apple Health' : t('Health Connect')
 
@@ -1491,6 +1494,17 @@ function HealthConnectCard({ S, toast }) {
       { icon: 'trash', label: t('Stop and remove what it wrote'), danger: true, onClick: turnOff(true) },
     ],
   })
+  const toggleReadiness = async on => {
+    setBusy(true)
+    try {
+      if (on) {
+        const result = await enableHealthReadiness()
+        if (result.readiness) setReadiness(result.readiness)
+        if (!result.ok) toast(t('Apple Health data was not available. You can still use Today without it.'))
+      } else setReadiness(await disableHealthReadiness())
+    } catch { toast(t('Something went wrong')) }
+    setBusy(false)
+  }
 
   return (
     <Section title={brand}
@@ -1501,6 +1515,10 @@ function HealthConnectCard({ S, toast }) {
         subtitle={t('Finished workouts and weigh-ins, from this phone only.')}>
         <Switch checked={!!h.on} disabled={busy} onChange={v => (v ? turnOn() : askOff())} />
       </Row>
+      {apple && <Row icon="sparkles" iconTint="var(--purple)" title={t('Health signals for Today')}
+        subtitle={t('Sleep, HRV, resting heart rate and respiratory rate stay on this iPhone.')}>
+        <Switch checked={!!readiness.on} disabled={busy} onChange={toggleReadiness} />
+      </Row>}
       {h.on && h.error === 'permission' && <Row icon="warning" iconTint="var(--orange)"
         title={t('Permission withdrawn. Tap to allow again')} accessory="chevron" onClick={turnOn} />}
       {h.on && <Row icon="list" iconTint="var(--blue)" title={apple ? t('Settings') : t('Open Health Connect')}

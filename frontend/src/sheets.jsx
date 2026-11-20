@@ -3410,7 +3410,7 @@ export function finishWorkoutSheet({ onDiscard } = {}) {
     ],
   })
 }
-function doFinishWorkout() {
+export function doFinishWorkout({ quiet = false, source = null, end = null } = {}) {
   const st = S()
   const A = st.active
   if (!A) return
@@ -3432,10 +3432,13 @@ function doFinishWorkout() {
     if (rec && !prs.includes(e.id)) e1prs.push({ id: e.id, ...rec })
   })
   const w = buildCompletedWorkout(A, {
-    end: past ? backfillEnd(A) : sessionEnd(A),
+    end: past ? backfillEnd(A) : sessionEnd(A, Number(end) || Date.now()),
     prs,
     snapshotFor: e => isCustomEx(EXIDX[e.id]) ? exerciseMuscleSnapshot(EXIDX[e.id]) : null,
   })
+  // A workout recorded by the Watch already exists in HealthKit through HKWorkoutSession.
+  // Keep the origin on the canonical record so the iPhone bridge does not write a duplicate.
+  if (source === 'watch') w.healthSource = 'watch'
   w.vol = workoutVolume(w)
   let shown = w
   update(s => {
@@ -3466,6 +3469,9 @@ function doFinishWorkout() {
   // on Discard: its bar is app-wide and would chime over the summary, and its callback writes
   // into s.active, which is gone. What it held is not logged, like any set left unchecked.
   useUI.getState().stopWork()
-  beep(snd(), 880, 0.15); beep(snd(), 1100, 0.15, 0.18); beep(snd(), 1320, 0.3, 0.36)
-  ui().openSheet(close => <FinishSummary w={shown} prs={prs} e1prs={e1prs} close={close} />, { kind: 'center', locked: true })
+  if (!quiet) {
+    beep(snd(), 880, 0.15); beep(snd(), 1100, 0.15, 0.18); beep(snd(), 1320, 0.3, 0.36)
+    ui().openSheet(close => <FinishSummary w={shown} prs={prs} e1prs={e1prs} close={close} />, { kind: 'center', locked: true })
+  }
+  return shown
 }

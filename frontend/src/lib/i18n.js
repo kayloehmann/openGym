@@ -9,6 +9,7 @@ import {
   getLang, dateLocale, t, tn, instrFor, exerciseNameFor, exerciseNameSearchText, getVersion,
   baseLang, derivePack, _setLangState, exerciseNameClass, descFor, instrTranslated, _setDetailsLoader, _setDetails, _detailsFailed
 } from './i18n-core.js'
+import { ADMIN_DE } from './admin-locale.js'
 
 export {
   LANGS, INSTR_LANGS, EXERCISE_NAME_LANGS, DATE_LOCALES, DERIVED_LOCALES, RTL_LANGS,
@@ -67,6 +68,9 @@ export async function setLang(l, showEn, enOnly) {
   const base = baseLang(l)
   let dict = {}, instr = null, exerciseNames = null
   try { dict = base === 'en' ? {} : (await localePacks['../locales/' + base + '.js']()).default } catch (e) { dict = {} }
+  // The operator dashboard was historically English-only. Its German supplement stays separate
+  // from the public locale packs so the other languages keep their existing English fallback.
+  if (base === 'de') dict = { ...ADMIN_DE, ...dict }
   try { instr = base === 'en' || !INSTR_LANGS.includes(base) ? null : (await instrPacks['../instr/' + base + '.js']()).default } catch (e) { instr = null }
   try {
     exerciseNames = base === 'en' || !EXERCISE_NAME_LANGS.includes(base)

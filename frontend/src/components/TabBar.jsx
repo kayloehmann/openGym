@@ -44,7 +44,7 @@ export default function TabBar({ onStart }) {
 
   return (
     <nav id="tabbar">
-      <Tab active={on('home')} icon="house" label={t('Home')} dot={trouble} onClick={() => nav('/home')} />
+      <Tab active={on('home')} icon="house" label={t('Today')} dot={trouble} onClick={() => nav('/home')} />
       <Tab active={on('plan')} icon="calendar" label={t('Plan')} onClick={() => nav('/plan')} />
       {/* On the workout screen itself there is nothing to resume, so the button reads as the
           tab it is and stays lit (#29); anywhere else it brings you back to the exercise you

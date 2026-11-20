@@ -5,6 +5,19 @@ import {
 } from './i18n-core.js'
 import { EXDB } from './exercises-data.js'
 import de from '../locales/de.js'
+import { ADMIN_DE } from './admin-locale.js'
+
+describe('German operator interface', () => {
+  it('translates the formerly English-only admin and coach surfaces', () => {
+    _setLangState('de', { ...ADMIN_DE, ...de }, null, null)
+    expect(t('AI Coach')).toBe('KI-Coach')
+    expect(t('Model')).toBe('Modell')
+    expect(t('Disable account')).toBe('Konto deaktivieren')
+    expect(t('The last update failed')).toBe('Die letzte Aktualisierung ist fehlgeschlagen')
+    expect(t('The list below is the last one that loaded.')).toBe('Unten steht die zuletzt erfolgreich geladene Liste.')
+    _setLangState('en', {}, null, null)
+  })
+})
 
 describe('baseLang', () => {
   it('maps a derived locale to the language whose packs it loads', () => {

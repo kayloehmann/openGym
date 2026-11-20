@@ -4,10 +4,11 @@ import HealthKit
 import UIKit
 
 /**
- * Write-only Apple Health bridge. The shared JavaScript sync planner decides which finished
- * workouts and weigh-ins changed; this plugin turns those plain records into HealthKit samples.
+ * Apple Health bridge. The shared JavaScript sync planner decides which finished workouts and
+ * weigh-ins changed; this plugin turns those plain records into HealthKit samples.
  * Every sample carries a stable sync identifier so edits replace the previous value and deletes
- * remove only data written by Kraftplan.
+ * remove only data written by Kraftplan. Read access is separate and returns only a compact,
+ * derived Today snapshot; raw HealthKit samples never leave this native plugin.
  */
 @objc(AppleHealthPlugin)
 public class AppleHealthPlugin: CAPPlugin {
@@ -17,6 +18,14 @@ public class AppleHealthPlugin: CAPPlugin {
     private static var lastSyncVersion = 0
 
     private var shareTypes: Set<HKSampleType> { [workoutType, weightType] }
+    private var readTypes: Set<HKObjectType> {
+        return [
+            HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!,
+            HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!,
+            HKObjectType.quantityType(forIdentifier: .restingHeartRate)!,
+            HKObjectType.quantityType(forIdentifier: .respiratoryRate)!,
+        ]
+    }
 
     @objc func status(_ call: CAPPluginCall) {
         guard HKHealthStore.isHealthDataAvailable() else {
@@ -37,6 +46,54 @@ public class AppleHealthPlugin: CAPPlugin {
                 return
             }
             call.resolve(["granted": self?.isGranted ?? false])
+        }
+    }
+
+    @objc func requestReadPermissions(_ call: CAPPluginCall) {
+        guard HKHealthStore.isHealthDataAvailable() else {
+            call.reject("Apple Health is not available", "unavailable")
+            return
+        }
+        store.requestAuthorization(toShare: [], read: readTypes) { _, error in
+            if let error = error {
+                call.reject(error.localizedDescription, "failed", error)
+                return
+            }
+            // HealthKit intentionally does not disclose read-authorisation status. A successful
+            // sheet therefore means only that the request completed; missing types remain neutral.
+            call.resolve(["requested": true])
+        }
+    }
+
+    @objc func readTodaySnapshot(_ call: CAPPluginCall) {
+        guard HKHealthStore.isHealthDataAvailable() else {
+            call.reject("Apple Health is not available", "unavailable")
+            return
+        }
+        let lock = NSLock()
+        let group = DispatchGroup()
+        var signals: [String: Any] = [:]
+
+        group.enter()
+        readSleep { value in lock.lock(); if let value = value { signals["sleep"] = value }; lock.unlock(); group.leave() }
+
+        let quantitySignals: [(String, HKQuantityTypeIdentifier, HKUnit, Double)] = [
+            ("hrv", .heartRateVariabilitySDNN, .secondUnit(with: .milli), 1),
+            ("restingHeartRate", .restingHeartRate, HKUnit.count().unitDivided(by: .minute()), 1),
+            ("respiratoryRate", .respiratoryRate, HKUnit.count().unitDivided(by: .minute()), 1),
+        ]
+        for (key, identifier, unit, scale) in quantitySignals {
+            group.enter()
+            readQuantity(identifier, unit: unit, scale: scale) { value in
+                lock.lock(); if let value = value { signals[key] = value }; lock.unlock(); group.leave()
+            }
+        }
+        group.notify(queue: .main) {
+            call.resolve([
+                "generatedAt": Int(Date().timeIntervalSince1970 * 1000),
+                "signals": signals,
+                "coverage": Array(signals.keys).sorted(),
+            ])
         }
     }
 
@@ -137,6 +194,78 @@ public class AppleHealthPlugin: CAPPlugin {
             end: time,
             metadata: baseMetadata(id: id, version: version)
         )
+    }
+
+    private func readQuantity(
+        _ identifier: HKQuantityTypeIdentifier,
+        unit: HKUnit,
+        scale: Double,
+        completion: @escaping ([String: Any]?) -> Void
+    ) {
+        guard let type = HKObjectType.quantityType(forIdentifier: identifier) else {
+            completion(nil); return
+        }
+        let now = Date()
+        let start = Calendar.current.date(byAdding: .day, value: -28, to: now)!
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: now, options: .strictEndDate)
+        let sort = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+        let query = HKSampleQuery(sampleType: type, predicate: predicate, limit: 400, sortDescriptors: [sort]) { _, samples, _ in
+            let values = (samples as? [HKQuantitySample] ?? []).map { sample in
+                (sample.quantity.doubleValue(for: unit) * scale, sample.endDate)
+            }.filter { $0.0.isFinite }
+            guard let latest = values.first else { completion(nil); return }
+            // Keep the current reading out of its own comparison where possible. HealthKit may
+            // return sparse data; two readings are enough for a useful personal baseline.
+            let baselineValues = values.dropFirst().map(\.0)
+            let baseline = baselineValues.isEmpty
+                ? latest.0
+                : baselineValues.reduce(0, +) / Double(baselineValues.count)
+            completion([
+                "value": self.rounded(latest.0),
+                "baseline": self.rounded(baseline),
+                "at": Int(latest.1.timeIntervalSince1970 * 1000),
+            ])
+        }
+        store.execute(query)
+    }
+
+    private func readSleep(completion: @escaping ([String: Any]?) -> Void) {
+        guard let type = HKObjectType.categoryType(forIdentifier: .sleepAnalysis) else {
+            completion(nil); return
+        }
+        let now = Date()
+        let start = Calendar.current.date(byAdding: .day, value: -29, to: now)!
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: now, options: .strictEndDate)
+        let sort = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+        let query = HKSampleQuery(sampleType: type, predicate: predicate, limit: 1000, sortDescriptors: [sort]) { _, samples, _ in
+            let asleep = (samples as? [HKCategorySample] ?? []).filter { [1, 3, 4, 5].contains($0.value) }
+            guard !asleep.isEmpty else { completion(nil); return }
+            let calendar = Calendar.current
+            var byDay: [Date: TimeInterval] = [:]
+            var latestEnd = Date.distantPast
+            for sample in asleep {
+                // Attribute a sleep segment to the day on which it ended. Capping each day keeps
+                // duplicated third-party sources from turning one night into an impossible value.
+                let day = calendar.startOfDay(for: sample.endDate)
+                byDay[day] = min(16 * 3600, (byDay[day] ?? 0) + sample.endDate.timeIntervalSince(sample.startDate))
+                latestEnd = max(latestEnd, sample.endDate)
+            }
+            guard let latestDay = byDay.keys.max(), let latestSeconds = byDay[latestDay] else {
+                completion(nil); return
+            }
+            let prior = byDay.filter { $0.key < latestDay }.map(\.value).filter { $0 > 0 }
+            let baselineSeconds = prior.isEmpty ? latestSeconds : prior.reduce(0, +) / Double(prior.count)
+            completion([
+                "value": self.rounded(latestSeconds / 3600),
+                "baseline": self.rounded(baselineSeconds / 3600),
+                "at": Int(latestEnd.timeIntervalSince1970 * 1000),
+            ])
+        }
+        store.execute(query)
+    }
+
+    private func rounded(_ value: Double) -> Double {
+        (value * 10).rounded() / 10
     }
 
     private func delete(_ type: HKSampleType, ids: [String], completion: @escaping (Error?) -> Void) {

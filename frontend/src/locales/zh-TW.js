@@ -1,6 +1,8 @@
 import { VIDEO_EN } from '../lib/video-locale.js'
+import { TODAY_EN } from '../lib/today-locale.js'
 export default {
   ...VIDEO_EN,
+  ...TODAY_EN,
   'Confirm': '確認',
   'Cancel': '取消',
   'Press back again to exit': '再按一次返回以退出',

@@ -1,7 +1,9 @@
 // Arabic UI strings. Keys are the English source strings (see lib/i18n.js).
 import { VIDEO_EN } from '../lib/video-locale.js'
+import { TODAY_EN } from '../lib/today-locale.js'
 export default {
   ...VIDEO_EN,
+  ...TODAY_EN,
   'Confirm': 'تأكيد',
   'Cancel': 'إلغاء',
   'Press back again to exit': 'اضغط زر الرجوع مرة أخرى للخروج',
