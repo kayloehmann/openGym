@@ -16,18 +16,32 @@
  * repair round as before.
  */
 
-const PLACEABLE = new Set(['swap-exercise', 'remove-exercise', 'add-exercise', 'sets', 'reps', 'repsMin', 'repsMax', 'sec']);
+const PLACEABLE = new Set([
+  "swap-exercise",
+  "remove-exercise",
+  "add-exercise",
+  "sets",
+  "reps",
+  "repsMin",
+  "repsMax",
+  "sec",
+]);
 
 /** Is this answer a review-style change list rather than a plan? */
-export const isChangeList = data => !!data && typeof data === 'object'
-  && Array.isArray(data.changes) && data.changes.length > 0
-  && !(Array.isArray(data.routines) && data.routines.length);
+export const isChangeList = (data) =>
+  !!data &&
+  typeof data === "object" &&
+  Array.isArray(data.changes) &&
+  data.changes.length > 0 &&
+  !(Array.isArray(data.routines) && data.routines.length);
 
 function routineFor(routines, target) {
-  const byId = routines.find(r => r.id === target.routineId);
+  const byId = routines.find((r) => r.id === target.routineId);
   if (byId) return byId;
-  if (typeof target.exId !== 'string') return null;
-  const holding = routines.filter(r => r.ex.some(e => e.id === target.exId));
+  if (typeof target.exId !== "string") return null;
+  const holding = routines.filter((r) =>
+    r.ex.some((e) => e.id === target.exId),
+  );
   return holding.length === 1 ? holding[0] : null;
 }
 
@@ -36,36 +50,60 @@ function routineFor(routines, target) {
  * null when any change cannot be placed exactly.
  */
 export function changesOntoPlan(previous, data) {
-  if (!previous || !Array.isArray(previous.routines) || !isChangeList(data)) return null;
-  const routines = previous.routines.map(r => ({ ...r, ex: (r.ex || []).map(e => ({ ...e })) }));
+  if (!previous || !Array.isArray(previous.routines) || !isChangeList(data))
+    return null;
+  const routines = previous.routines.map((r) => ({
+    ...r,
+    ex: (r.ex || []).map((e) => ({ ...e })),
+  }));
   for (const c of data.changes) {
-    if (!c || typeof c !== 'object' || !PLACEABLE.has(c.type)) return null;
-    const target = c.target && typeof c.target === 'object' ? c.target : {};
+    if (!c || typeof c !== "object" || !PLACEABLE.has(c.type)) return null;
+    const target = c.target && typeof c.target === "object" ? c.target : {};
     const routine = routineFor(routines, target);
     if (!routine) return null;
-    if (c.type === 'add-exercise') {
+    if (c.type === "add-exercise") {
       const a = c.after;
-      if (!a || typeof a !== 'object' || typeof a.id !== 'string') return null;
+      if (!a || typeof a !== "object" || typeof a.id !== "string") return null;
       const { position, ...ex } = a;
-      const at = Number.isInteger(position) && position >= 0 && position <= routine.ex.length ? position : routine.ex.length;
-      routine.ex.splice(at, 0, { sets: 3, ...ex, ...(typeof c.why === 'string' ? { why: c.why } : {}) });
+      const at =
+        Number.isInteger(position) &&
+        position >= 0 &&
+        position <= routine.ex.length
+          ? position
+          : routine.ex.length;
+      routine.ex.splice(at, 0, {
+        sets: 3,
+        ...ex,
+        ...(typeof c.why === "string" ? { why: c.why } : {}),
+      });
       continue;
     }
-    const i = routine.ex.findIndex(e => e.id === target.exId);
+    const i = routine.ex.findIndex((e) => e.id === target.exId);
     if (i < 0) return null;
-    if (c.type === 'remove-exercise') { routine.ex.splice(i, 1); continue; }
-    if (c.type === 'swap-exercise') {
+    if (c.type === "remove-exercise") {
+      routine.ex.splice(i, 1);
+      continue;
+    }
+    if (c.type === "swap-exercise") {
       const a = c.after;
-      if (!a || typeof a !== 'object' || typeof a.id !== 'string') return null;
+      if (!a || typeof a !== "object" || typeof a.id !== "string") return null;
       // The new exercise takes the old one's slot and prescription, minus what only described
       // the old one; what the change states itself wins.
-      const { id: _old, weight: _w, why: _why, bodyweight: _bw, side: _side, ...kept } = routine.ex[i];
+      const {
+        id: _old,
+        weight: _w,
+        why: _why,
+        bodyweight: _bw,
+        side: _side,
+        ...kept
+      } = routine.ex[i];
       routine.ex[i] = {
-        ...kept, id: a.id,
+        ...kept,
+        id: a.id,
         ...(a.sets != null ? { sets: a.sets } : {}),
         ...(a.reps != null ? { reps: a.reps } : {}),
         ...(a.weight != null ? { weight: a.weight } : {}),
-        ...(typeof c.why === 'string' ? { why: c.why } : {})
+        ...(typeof c.why === "string" ? { why: c.why } : {}),
       };
       continue;
     }
@@ -76,10 +114,13 @@ export function changesOntoPlan(previous, data) {
   return {
     coach_contract: data.coach_contract,
     name: previous.name,
-    summary: typeof data.summary === 'string' && data.summary.trim() ? data.summary : previous.summary,
+    summary:
+      typeof data.summary === "string" && data.summary.trim()
+        ? data.summary
+        : previous.summary,
     basedOn: previous.basedOn,
     week: previous.week,
     routines,
-    customEx: previous.customEx || []
+    customEx: previous.customEx || [],
   };
 }

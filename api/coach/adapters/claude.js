@@ -22,20 +22,24 @@
  * goes false, and no Coach UI is mounted — rather than a boot crash for every instance that
  * never asked for the feature.
  */
-import fs from 'node:fs';
-import path from 'node:path';
-import { spawn } from 'node:child_process';
-import { createRequire } from 'node:module';
-import { fileURLToPath } from 'node:url';
-import { unprivilegedIds } from './spawn.js';
-import { SYSTEM_PROMPT } from '../core/system-prompt.js';
+import fs from "node:fs";
+import path from "node:path";
+import { spawn } from "node:child_process";
+import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
+import { unprivilegedIds } from "./spawn.js";
+import { SYSTEM_PROMPT } from "../core/system-prompt.js";
 
-const PKG = '@anthropic-ai/claude-agent-sdk';
+const PKG = "@anthropic-ai/claude-agent-sdk";
 const require_ = createRequire(import.meta.url);
 // Read rather than hardcoded: the fork's copy still identified itself as 1.2.3 two releases
 // later, which is the failure mode of every version string typed by hand.
 const CLIENT_APP = `opengym-coach/${(() => {
-  try { return require_('../../package.json').version; } catch { return '0' }
+  try {
+    return require_("../../package.json").version;
+  } catch {
+    return "0";
+  }
 })()}`;
 const OUTPUT_CAP = 4 * 1024 * 1024;
 
@@ -46,15 +50,19 @@ export const LOCKDOWN = Object.freeze({
   skills: [],
   strictMcpConfig: true,
   persistSession: false,
-  permissionMode: 'dontAsk',
-  maxTurns: 1
+  permissionMode: "dontAsk",
+  maxTurns: 1,
 });
 
 let cached;
 /** Resolve the SDK, or null when this image was built without it. Never throws. */
 async function sdk() {
   if (cached !== undefined) return cached;
-  try { cached = await import(PKG); } catch { cached = null; }
+  try {
+    cached = await import(PKG);
+  } catch {
+    cached = null;
+  }
   return cached;
 }
 
@@ -64,8 +72,14 @@ async function sdk() {
 function installedVersion() {
   try {
     const entry = fileURLToPath(import.meta.resolve(PKG));
-    return JSON.parse(fs.readFileSync(path.join(path.dirname(entry), 'package.json'), 'utf8')).version || null;
-  } catch { return null; }
+    return (
+      JSON.parse(
+        fs.readFileSync(path.join(path.dirname(entry), "package.json"), "utf8"),
+      ).version || null
+    );
+  } catch {
+    return null;
+  }
 }
 
 /* The SDK owns the protocol; the Coach still owns the process boundary. Its runtime is launched
@@ -73,13 +87,19 @@ function installedVersion() {
    something an adapter can forget to do. */
 function spawnAsCoach({ command, args, cwd, env, signal }) {
   const ids = unprivilegedIds();
-  return spawn(command, args, { cwd, env, signal, stdio: ['pipe', 'pipe', 'pipe'], ...(ids || {}) });
+  return spawn(command, args, {
+    cwd,
+    env,
+    signal,
+    stdio: ["pipe", "pipe", "pipe"],
+    ...(ids || {}),
+  });
 }
 
 export default {
-  id: 'claude',
+  id: "claude",
   spawns: true,
-  runtime: 'Claude Agent SDK',
+  runtime: "Claude Agent SDK",
 
   /* Importing the package is the check: it is exactly what a job will do, and it is the one
      difference between the two build targets. The credential is deliberately not probed here —
@@ -87,18 +107,38 @@ export default {
      module never reads. */
   async check() {
     const m = await sdk();
-    if (!m) return { ok: false, error: `the Claude runtime is not installed in this image (${PKG})` };
+    if (!m)
+      return {
+        ok: false,
+        error: `the Claude runtime is not installed in this image (${PKG})`,
+      };
     const v = installedVersion();
-    return { ok: true, version: v ? `Claude Agent SDK ${v}` : 'Claude Agent SDK' };
+    return {
+      ok: true,
+      version: v ? `Claude Agent SDK ${v}` : "Claude Agent SDK",
+    };
   },
 
   async invoke({ prompt, jobDir, env, model, timeoutMs }) {
     const m = await sdk();
-    if (!m) return { code: -1, text: '', stderr: `${PKG} is not installed`, timedOut: false, spawnError: true };
+    if (!m)
+      return {
+        code: -1,
+        text: "",
+        stderr: `${PKG} is not installed`,
+        timedOut: false,
+        spawnError: true,
+      };
 
-    let text = '', stderr = '', failure = '', timedOut = false;
+    let text = "",
+      stderr = "",
+      failure = "",
+      timedOut = false;
     const abortController = new AbortController();
-    const timer = setTimeout(() => { timedOut = true; abortController.abort(); }, timeoutMs);
+    const timer = setTimeout(() => {
+      timedOut = true;
+      abortController.abort();
+    }, timeoutMs);
 
     try {
       for await (const message of m.query({
@@ -113,26 +153,63 @@ export default {
           env: { ...env, CLAUDE_AGENT_SDK_CLIENT_APP: CLIENT_APP },
           model: model || undefined,
           systemPrompt: SYSTEM_PROMPT,
-          stderr: data => { if (stderr.length < OUTPUT_CAP) stderr += data; },
-          spawnClaudeCodeProcess: spawnAsCoach
-        }
+          stderr: (data) => {
+            if (stderr.length < OUTPUT_CAP) stderr += data;
+          },
+          spawnClaudeCodeProcess: spawnAsCoach,
+        },
       })) {
-        if (message.type !== 'result') continue;
-        if (message.subtype === 'success') text = message.result;
+        if (message.type !== "result") continue;
+        if (message.subtype === "success") text = message.result;
         // A non-success result carries its reason in `subtype` (error_during_execution,
         // error_max_turns, …) and `stop_reason`. There is no error list on it — do not invent one.
-        else failure = `the Agent SDK stopped: ${message.subtype}${message.stop_reason ? ` (${message.stop_reason})` : ''}`;
+        else
+          failure = `the Agent SDK stopped: ${message.subtype}${message.stop_reason ? ` (${message.stop_reason})` : ""}`;
       }
     } catch (e) {
-      if (timedOut) return { code: -1, text: '', stderr: 'the Agent SDK timed out', timedOut: true, spawnError: false };
-      return { code: -1, text: '', stderr: stderr || (e instanceof Error ? e.message : String(e)), timedOut: false, spawnError: true };
+      if (timedOut)
+        return {
+          code: -1,
+          text: "",
+          stderr: "the Agent SDK timed out",
+          timedOut: true,
+          spawnError: false,
+        };
+      return {
+        code: -1,
+        text: "",
+        stderr: stderr || (e instanceof Error ? e.message : String(e)),
+        timedOut: false,
+        spawnError: true,
+      };
     } finally {
       clearTimeout(timer);
     }
 
-    if (timedOut) return { code: -1, text: '', stderr: 'the Agent SDK timed out', timedOut: true, spawnError: false };
-    if (failure) return { code: 1, text: '', stderr: failure, timedOut: false, spawnError: false };
-    if (!text) return { code: 1, text: '', stderr: stderr || 'the Agent SDK returned no result', timedOut: false, spawnError: false };
+    if (timedOut)
+      return {
+        code: -1,
+        text: "",
+        stderr: "the Agent SDK timed out",
+        timedOut: true,
+        spawnError: false,
+      };
+    if (failure)
+      return {
+        code: 1,
+        text: "",
+        stderr: failure,
+        timedOut: false,
+        spawnError: false,
+      };
+    if (!text)
+      return {
+        code: 1,
+        text: "",
+        stderr: stderr || "the Agent SDK returned no result",
+        timedOut: false,
+        spawnError: false,
+      };
     return { code: 0, text, stderr, timedOut: false, spawnError: false };
-  }
+  },
 };

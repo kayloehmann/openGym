@@ -7,56 +7,72 @@
  * whether the contents are safe to act on. Fields that may hold any JSON value (`before`,
  * `after`) say so with a type union, which the grammar converter does support.
  */
-const ANY = { type: ['number', 'string', 'boolean', 'object', 'array', 'null'] };
-const STR = { type: 'string' };
-const STRINGS = { type: 'array', items: { type: 'string' } };
+const ANY = {
+  type: ["number", "string", "boolean", "object", "array", "null"],
+};
+const STR = { type: "string" };
+const STRINGS = { type: "array", items: { type: "string" } };
 
 export const REVIEW_SCHEMA = {
-  type: 'object',
+  type: "object",
   properties: {
-    coach_contract: { type: 'integer' },
-    nochange: { type: 'boolean' },
+    coach_contract: { type: "integer" },
+    nochange: { type: "boolean" },
     reading: STR,
     summary: STR,
     evidence: {
-      type: 'object',
-      properties: { from: STR, to: STR, sessions: { type: 'integer' } }
+      type: "object",
+      properties: { from: STR, to: STR, sessions: { type: "integer" } },
     },
     changes: {
-      type: 'array',
+      type: "array",
       items: {
-        type: 'object',
+        type: "object",
         properties: {
           id: STR,
           type: STR,
           target: {
-            type: 'object',
-            properties: { routineId: STR, exId: STR, weekday: { type: 'integer' } }
+            type: "object",
+            properties: {
+              routineId: STR,
+              exId: STR,
+              weekday: { type: "integer" },
+            },
           },
           before: ANY,
           after: ANY,
-          why: STR
+          why: STR,
         },
-        required: ['type', 'why']
-      }
+        required: ["type", "why"],
+      },
     },
-    notes: STRINGS
+    notes: STRINGS,
   },
-  required: ['coach_contract']
+  required: ["coach_contract"],
 };
 
 const EX_SCHEMA = {
-  type: 'object',
+  type: "object",
   properties: {
-    id: STR, sets: { type: 'integer' }, mode: STR,
-    reps: { type: 'integer' }, sec: { type: 'integer' },
-    min: { type: 'integer' }, speed: { type: 'number' },
-    weight: { type: 'number' }, prog: STR, inc: { type: 'number' },
-    repsMin: { type: 'integer' }, repsMax: { type: 'integer' },
-    bodyweight: { type: 'boolean' }, side: { type: 'boolean' },
-    sg: STR, why: STR, position: { type: 'integer' }
+    id: STR,
+    sets: { type: "integer" },
+    mode: STR,
+    reps: { type: "integer" },
+    sec: { type: "integer" },
+    min: { type: "integer" },
+    speed: { type: "number" },
+    weight: { type: "number" },
+    prog: STR,
+    inc: { type: "number" },
+    repsMin: { type: "integer" },
+    repsMax: { type: "integer" },
+    bodyweight: { type: "boolean" },
+    side: { type: "boolean" },
+    sg: STR,
+    why: STR,
+    position: { type: "integer" },
   },
-  required: ['id', 'sets']
+  required: ["id", "sets"],
 };
 
 // `week` and `routines[].id` are required, not optional: the week is the only thing that says
@@ -65,13 +81,13 @@ const EX_SCHEMA = {
 // grammar-valid, and something validate.js can only ever reject ("the week schedules 0 days but
 // 3 were asked for"), through the repair round and out as a failed job.
 export const CREATE_SCHEMA = {
-  type: 'object',
+  type: "object",
   properties: {
-    coach_contract: { type: 'integer' },
+    coach_contract: { type: "integer" },
     name: STR,
     summary: STR,
     basedOn: STR,
-    week: { type: 'object' },
+    week: { type: "object" },
     // The caps are the validator's own (MAX_ROUTINES, MAX_EX_PER_ROUTINE), stated here as well
     // because "1-7 routines, each 3-12 exercises" in create.md is only a request. A small model
     // that starts repeating itself does not stop at a request: qwen2.5:3b walks the library id by
@@ -79,36 +95,49 @@ export const CREATE_SCHEMA = {
     // answer that arrives cut in half and cannot be parsed. maxItems ends that run at seven
     // routines instead.
     routines: {
-      type: 'array',
+      type: "array",
       maxItems: 7,
       items: {
-        type: 'object',
+        type: "object",
         properties: {
-          id: STR, name: STR, emoji: STR, prog: STR, why: STR,
-          ex: { type: 'array', maxItems: 20, items: EX_SCHEMA }
+          id: STR,
+          name: STR,
+          emoji: STR,
+          prog: STR,
+          why: STR,
+          ex: { type: "array", maxItems: 20, items: EX_SCHEMA },
         },
-        required: ['id', 'name', 'ex']
-      }
+        required: ["id", "name", "ex"],
+      },
     },
     customEx: {
-      type: 'array',
-      items: { type: 'object', properties: { id: STR, n: STR, bp: STR, desc: STR }, required: ['id', 'n'] }
-    }
+      type: "array",
+      items: {
+        type: "object",
+        properties: { id: STR, n: STR, bp: STR, desc: STR },
+        required: ["id", "n"],
+      },
+    },
   },
-  required: ['coach_contract', 'week', 'routines']
+  required: ["coach_contract", "week", "routines"],
 };
 
 export const DEBRIEF_SCHEMA = {
-  type: 'object',
+  type: "object",
   properties: {
-    coach_contract: { type: 'integer' },
+    coach_contract: { type: "integer" },
     summary: STR,
-    score: { type: 'integer' },
+    score: { type: "integer" },
     highlights: STRINGS,
     watch: STRINGS,
-    nextTime: STRINGS
+    nextTime: STRINGS,
   },
-  required: ['coach_contract', 'summary', 'score']
+  required: ["coach_contract", "summary", "score"],
 };
 
-export const SCHEMAS = { review: REVIEW_SCHEMA, create: CREATE_SCHEMA, refine: CREATE_SCHEMA, debrief: DEBRIEF_SCHEMA };
+export const SCHEMAS = {
+  review: REVIEW_SCHEMA,
+  create: CREATE_SCHEMA,
+  refine: CREATE_SCHEMA,
+  debrief: DEBRIEF_SCHEMA,
+};

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.6.9/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": [
+      "biome.json",
+      "package.json",
+      "frontend/src/coach.css",
+      "frontend/src/lib/coach*.js",
+      "frontend/src/views/{Coach,AdminCoach}*.jsx",
+      "api/coach/**/*.{js,mjs}",
+      "!api/coach/core/library-data.js",
+      "!!**/fixtures",
+      "!!**/node_modules"
+    ]
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "linter": {
+    "enabled": false
+  },
+  "assist": {
+    "enabled": false
+  }
+}

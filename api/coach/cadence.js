@@ -9,8 +9,8 @@
  * who trained nothing this week, should hear nothing at all — a notification that exists to
  * report the absence of news is how people turn notifications off.
  */
-import * as jobs from './jobs.js';
-import * as cfgStore from './config.js';
+import * as jobs from "./jobs.js";
+import * as cfgStore from "./config.js";
 
 const TICK_MS = 60000;
 
@@ -20,7 +20,7 @@ const TICK_MS = 60000;
  *  one that found nothing to change — still read those workouts. */
 export function isDue(coach, S, now, reviewedAt = 0, tz = null) {
   const cadence = coach.cadence;
-  if (!cadence || cadence === 'off') return false;
+  if (!cadence || cadence === "off") return false;
   const lastAt = Math.max(coach.lastReview?.at || 0, reviewedAt);
 
   // Nothing new to read is the most common reason not to run, and it applies to both modes.
@@ -28,7 +28,13 @@ export function isDue(coach, S, now, reviewedAt = 0, tz = null) {
   // A workout's `end` is on the same clock as the review's timestamp; its `d` is the phone's
   // local day, which can run ahead of the server's UTC day, so the date only stands in for a
   // workout that has no end.
-  const since = workouts.filter(w => !lastAt || (w.end ? w.end > lastAt : w.d > new Date(lastAt).toISOString().slice(0, 10)));
+  const since = workouts.filter(
+    (w) =>
+      !lastAt ||
+      (w.end
+        ? w.end > lastAt
+        : w.d > new Date(lastAt).toISOString().slice(0, 10)),
+  );
   if (!since.length) return false;
 
   if (cadence.everyWorkouts) {
@@ -42,7 +48,12 @@ export function isDue(coach, S, now, reviewedAt = 0, tz = null) {
     // reason the workout reminder stopped asking for its exact minute. `lastAt` is the marker
     // that says whether it already ran: the server's own finished-review timestamps (the
     // `reviewedAt` the caller computes from the job history) and the client's lastReview.
-    const at = weeklySlotAt(now, cadence.weekly.day ?? 0, cadence.weekly.time || '18:00', tz);
+    const at = weeklySlotAt(
+      now,
+      cadence.weekly.day ?? 0,
+      cadence.weekly.time || "18:00",
+      tz,
+    );
     return at != null && lastAt < at;
   }
   return false;
@@ -68,8 +79,9 @@ export function isDue(coach, S, now, reviewedAt = 0, tz = null) {
  * but before its time it is last week's — which the last run is already past, so nothing fires
  * early. Null when the shapes do not parse. */
 function weeklySlotAt(now, wantDay, wantTime, tz) {
-  const d = /^(\d{4})-(\d{2})-(\d{2})$/.exec(now.date || '');
-  const nowMin = hhmmToMin(now.hhmm), wantMin = hhmmToMin(wantTime);
+  const d = /^(\d{4})-(\d{2})-(\d{2})$/.exec(now.date || "");
+  const nowMin = hhmmToMin(now.hhmm),
+    wantMin = hhmmToMin(wantTime);
   if (!d || !Number.isFinite(nowMin) || !Number.isFinite(wantMin)) return null;
   const midnight = Date.UTC(+d[1], +d[2] - 1, +d[3]);
   let back = (now.weekday - wantDay + 7) % 7;
@@ -83,18 +95,33 @@ function weeklySlotAt(now, wantDay, wantTime, tz) {
  * to the offset where the caller is right now, which is all this ever had to go on. */
 function offsetAt(tz, ms, hereWall) {
   try {
-    const p = new Intl.DateTimeFormat('en-CA', {
-      timeZone: tz, hourCycle: 'h23',
-      year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'
+    const p = new Intl.DateTimeFormat("en-CA", {
+      timeZone: tz,
+      hourCycle: "h23",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
     }).formatToParts(new Date(ms));
-    const g = t => Number(p.find(x => x.type === t).value);
-    return Date.UTC(g('year'), g('month') - 1, g('day'), g('hour'), g('minute'), g('second')) - ms;
+    const g = (t) => Number(p.find((x) => x.type === t).value);
+    return (
+      Date.UTC(
+        g("year"),
+        g("month") - 1,
+        g("day"),
+        g("hour"),
+        g("minute"),
+        g("second"),
+      ) - ms
+    );
   } catch {
     return hereWall - Date.now();
   }
 }
-const hhmmToMin = v => {
-  const m = /^(\d{1,2}):(\d{2})$/.exec(v || '');
+const hhmmToMin = (v) => {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(v || "");
   return m ? Number(m[1]) * 60 + Number(m[2]) : NaN;
 };
 
@@ -108,7 +135,7 @@ export function startCadence(deps) {
       try {
         const S = jobs.readState(user.id);
         const coach = S?.coach;
-        if (!coach?.consent?.agreedAt) continue;         // consent revoked ⇒ cadence stops
+        if (!coach?.consent?.agreedAt) continue; // consent revoked ⇒ cadence stops
         // A job still running, or a proposal nobody has answered, is not a reason for another:
         // a second review would only replace the first unread. status() also retires an
         // expired proposal, which a phone that stays closed never polls for.
@@ -117,18 +144,28 @@ export function startCadence(deps) {
         // Reviewed means the model read those workouts and answered — with a proposal, with
         // "nothing to change", or with an answer that failed validation and was paid for all the
         // same. A call that never reached it (timeout, no runtime, consent, switched off) is retried.
-        const reviewedAt = Math.max(0, ...jobs.readUser(user.id).history
-          .filter(h => h.kind === 'review' && (h.outcome === 'ready' || h.outcome === 'nochange'
-            || (h.outcome === 'failed' && h.errorClass === 'unusable')))
-          .map(h => h.at || 0));
-        const tz = coach.cadence?.weekly ? (S.reminder?.tz || 'UTC') : null;
+        const reviewedAt = Math.max(
+          0,
+          ...jobs
+            .readUser(user.id)
+            .history.filter(
+              (h) =>
+                h.kind === "review" &&
+                (h.outcome === "ready" ||
+                  h.outcome === "nochange" ||
+                  (h.outcome === "failed" && h.errorClass === "unusable")),
+            )
+            .map((h) => h.at || 0),
+        );
+        const tz = coach.cadence?.weekly ? S.reminder?.tz || "UTC" : null;
         const now = tz ? deps.userNow(tz) : null;
         if (!isDue(coach, S, now, reviewedAt, tz)) continue;
-        jobs.enqueue(user.id, { kind: 'review', trigger: 'scheduled' });
-        console.log('coach: scheduled review queued for', user.id);
+        jobs.enqueue(user.id, { kind: "review", trigger: "scheduled" });
+        console.log("coach: scheduled review queued for", user.id);
       } catch (e) {
         // Caps, an in-flight job, a provider that just went down: all ordinary, all silent.
-        if (!(e instanceof jobs.CoachError)) console.error('coach cadence', user.id, e);
+        if (!(e instanceof jobs.CoachError))
+          console.error("coach cadence", user.id, e);
       }
     }
   }, TICK_MS);

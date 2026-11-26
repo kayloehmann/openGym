@@ -11,41 +11,53 @@
  * Adding a provider is a file here plus a row in config.PROVIDERS. Nothing else in the
  * codebase — routes, jobs, payload, validation, UI — knows which one is configured.
  */
-import { run } from './spawn.js';
-import { fileURLToPath } from 'node:url';
-import claude from './claude.js';
-import codex from './codex.js';
-import anthropic from '../core/adapters/anthropic.js';
-import openai from '../core/adapters/openai.js';
-import gemini from '../core/adapters/gemini.js';
-import compatible from '../core/adapters/compatible.js';
+import { run } from "./spawn.js";
+import { fileURLToPath } from "node:url";
+import claude from "./claude.js";
+import codex from "./codex.js";
+import anthropic from "../core/adapters/anthropic.js";
+import openai from "../core/adapters/openai.js";
+import gemini from "../core/adapters/gemini.js";
+import compatible from "../core/adapters/compatible.js";
 
 /**
  * The in-repo fake provider. Ships with the image on purpose: it is what CI drives, and it
  * lets an instance owner see the entire Coach loop — intake, proposal, apply, revert —
  * before deciding whether to connect a real account to it.
  */
-const FIXTURE = fileURLToPath(new URL('../fixture-cli.mjs', import.meta.url));
+const FIXTURE = fileURLToPath(new URL("../fixture-cli.mjs", import.meta.url));
 const fixture = {
-  id: 'fixture',
+  id: "fixture",
   spawns: true,
   cli: process.execPath,
-  async check() { return { ok: true, version: 'fixture' }; },
+  async check() {
+    return { ok: true, version: "fixture" };
+  },
   async invoke({ prompt, jobDir, env, timeoutMs }) {
     const r = await run(process.execPath, [FIXTURE], {
-      stdin: prompt, cwd: jobDir, timeoutMs,
+      stdin: prompt,
+      cwd: jobDir,
+      timeoutMs,
       // The fixture needs its mode knob, which the sanitised job env deliberately drops.
-      env: { ...env, FIXTURE_MODE: process.env.FIXTURE_MODE || '' },
-      asCoach: false   // a temp dir owned by root in tests; the fixture reads only stdin anyway
+      env: { ...env, FIXTURE_MODE: process.env.FIXTURE_MODE || "" },
+      asCoach: false, // a temp dir owned by root in tests; the fixture reads only stdin anyway
     });
-    return { ...r, text: (r.stdout || '').trim() };
-  }
+    return { ...r, text: (r.stdout || "").trim() };
+  },
 };
 
 /* claude is registered unconditionally, and that is safe because claude.js imports the SDK
    lazily: on the default image the module loads, check() reports the runtime as absent, and
    isConnected() keeps the Coach out of /api/config entirely. Codex is here too, and unlike
    the SDK its runtime is a CLI binary, so its absence shows up as a spawn error from check(). */
-const ADAPTERS = { fixture, claude, codex, anthropic, openai, gemini, compatible };
-export const adapterFor = provider => ADAPTERS[provider] || null;
+const ADAPTERS = {
+  fixture,
+  claude,
+  codex,
+  anthropic,
+  openai,
+  gemini,
+  compatible,
+};
+export const adapterFor = (provider) => ADAPTERS[provider] || null;
 export default ADAPTERS;
