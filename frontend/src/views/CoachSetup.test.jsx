@@ -6,9 +6,9 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 
 const src = readFileSync(new URL("./CoachSetup.jsx", import.meta.url), "utf8");
-const statics = [...src.matchAll(/^import .* from '([^']+)'/gm)].map(
-  (m) => m[1],
-);
+const statics = [
+  ...src.matchAll(/^import\s+(?:[^'";]+?\sfrom\s+)?(["'])([^"']+)\1/gm),
+].map((m) => m[2]);
 
 describe("CoachSetup keeps the core out until a mode is chosen", () => {
   it("imports only the provider table and the category names from the core", () => {
@@ -20,7 +20,7 @@ describe("CoachSetup keeps the core out until a mode is chosen", () => {
   });
   it("never statically imports the phone pipeline", () => {
     expect(statics.some((p) => p.includes("coach-local"))).toBe(false);
-    expect(src).toMatch(/import\('\.\.\/lib\/coach-local\.js'\)/);
+    expect(src).toMatch(/import\(\s*(["'])\.\.\/lib\/coach-local\.js\1\s*\)/);
   });
   it("the categories module carries no catalogue", () => {
     const cat = readFileSync(

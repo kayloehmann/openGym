@@ -146,7 +146,7 @@ describe("every refusal the server sends has a line here", () => {
     expect(guard).toBeTruthy();
     const body = guard.match(/json\(res, 503, (\{[^}]*\})\)/)?.[1];
     expect(body).toBeTruthy();
-    const cls = body.match(/code: '(\w+)'/)?.[1];
+    const cls = body.match(/code:\s*(["'])(\w+)\1/)?.[2];
     expect(cls, `the 503 guard answers ${body}, with no class`).toBeTruthy();
     expect(body).toContain(`error: USER_ERROR.${cls}`); // its words are that class's words
     expect(Object.keys(JOB_ERRORS)).toContain(cls);
@@ -175,7 +175,7 @@ describe("every refusal the server sends has a line here", () => {
   });
 
   it("the unprivileged line says what the server says, in the app's voice", () => {
-    const atEnqueue = routes.match(/^\s*unprivileged: '([^']+)'/m)?.[1];
+    const atEnqueue = routes.match(/^\s*unprivileged:\s*(["'])(.*?)\1/m)?.[2];
     expect(atEnqueue).toBeTruthy();
     expect(EN.JOB_ERRORS.unprivileged).toBe(
       atEnqueue[0].toUpperCase() + atEnqueue.slice(1) + ".",
