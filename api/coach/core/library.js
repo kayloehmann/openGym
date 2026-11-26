@@ -5,23 +5,23 @@
  * It is an ES module rather than JSON on purpose: bare node needs createRequire for JSON, Vite
  * needs an import attribute, and this file has to load under both without either knowing.
  */
-import { EXERCISES } from './library-data.js';
+import { EXERCISES } from "./library-data.js";
 
 export const LIBRARY = EXERCISES;
-export const LIB_BY_ID = new Map(LIBRARY.map(e => [e.id, e]));
+export const LIB_BY_ID = new Map(LIBRARY.map((e) => [e.id, e]));
 
-export const libraryHas = id => LIB_BY_ID.has(id);
-export const libraryName = id => LIB_BY_ID.get(id)?.n || null;
+export const libraryHas = (id) => LIB_BY_ID.has(id);
+export const libraryName = (id) => LIB_BY_ID.get(id)?.n || null;
 
 /* Whether the person's equipment covers a catalogue exercise. Body weight is never gated, the
    same rule the app's own equipment profiles follow (frontend lib/equipment.js), and an id the
    catalogue does not hold (one of their own exercises) is theirs to judge, not ours. No
    equipment stated means the whole catalogue. */
-const ALWAYS_AVAILABLE = 'body weight';
+const ALWAYS_AVAILABLE = "body weight";
 export function equipmentAllows(equipment, id) {
-  const wanted = (equipment || []).map(x => String(x).toLowerCase());
+  const wanted = (equipment || []).map((x) => String(x).toLowerCase());
   if (!wanted.length) return true;
-  const eq = (LIB_BY_ID.get(id)?.eq || '').toLowerCase();
+  const eq = (LIB_BY_ID.get(id)?.eq || "").toLowerCase();
   return !eq || eq === ALWAYS_AVAILABLE || wanted.includes(eq);
 }
 
@@ -36,7 +36,12 @@ export const MAX_LIBRARY = 160;
 
 // What one library entry tells the model: enough to pick it, nothing more. The taxonomy
 // fields beyond body part never appear in a rationale and cost ~30 tokens an entry.
-const slim = e => ({ id: e.id, n: e.n, bp: e.bp, ...(e.custom ? { custom: true } : {}) });
+const slim = (e) => ({
+  id: e.id,
+  n: e.n,
+  bp: e.bp,
+  ...(e.custom ? { custom: true } : {}),
+});
 
 /* Mobility work is not what a plan is built from, and at an even share per body part the
    catalogue's 57 stretches crowded out the lifts that are: a first plan for someone who
@@ -49,7 +54,7 @@ const slim = e => ({ id: e.id, n: e.n, bp: e.bp, ...(e.custom ? { custom: true }
 
    The word boundary is what stops this being a silent data bug: "single leg bridge with
    outstretched leg" is a glute exercise, not a stretch. */
-export const isStretch = e => /\bstretch(es|ing)?\b/i.test((e && e.n) || '');
+export const isStretch = (e) => /\bstretch(es|ing)?\b/i.test((e && e.n) || "");
 
 /* ---------- what each body part is worth in candidates ----------
    An equal lane per body part reads fair and is not: it spent as many of the 160 slots on
@@ -61,36 +66,62 @@ export const isStretch = e => /\bstretch(es|ing)?\b/i.test((e && e.n) || '');
    is what keeps a narrow equipment filter from returning a short slice. Anything not listed
    gets 1, so a body part added to the catalogue later still appears rather than vanishing. */
 const LANE_WEIGHT = {
-  'back': 4, 'chest': 4, 'upper legs': 4,
-  'shoulders': 3,
-  'upper arms': 2, 'waist': 2,
-  'cardio': 1, 'lower arms': 1, 'lower legs': 1, 'neck': 1
+  back: 4,
+  chest: 4,
+  "upper legs": 4,
+  shoulders: 3,
+  "upper arms": 2,
+  waist: 2,
+  cardio: 1,
+  "lower arms": 1,
+  "lower legs": 1,
+  neck: 1,
 };
-const laneWeight = bp => LANE_WEIGHT[bp] ?? 1;
+const laneWeight = (bp) => LANE_WEIGHT[bp] ?? 1;
 
-export function librarySlice(S, equipment, { keep = [], max = MAX_LIBRARY } = {}) {
-  const wanted = (equipment || []).map(x => String(x).toLowerCase());
+export function librarySlice(
+  S,
+  equipment,
+  { keep = [], max = MAX_LIBRARY } = {},
+) {
+  const wanted = (equipment || []).map((x) => String(x).toLowerCase());
   // A custom exercise's name and body part are whatever the person typed, and its id is
   // whatever the client wrote; all three ride into every prompt. Cut to the bounds payload.js
   // gives every other name (NAME_MAX, 80) and id (ID_MAX, 64); a non-string reads as absent.
-  const cut = (v, n) => (typeof v === 'string' ? v.slice(0, n) : undefined);
+  const cut = (v, n) => (typeof v === "string" ? v.slice(0, n) : undefined);
   const customs = (Array.isArray(S.customEx) ? S.customEx : [])
-    .filter(c => c && typeof c === 'object' && typeof c.id === 'string' && c.id)
-    .map(c => ({ id: cut(c.id, 64), n: cut(c.n, 80), bp: cut(c.bp, 40), tg: null, eq: 'custom', custom: true }));
+    .filter(
+      (c) => c && typeof c === "object" && typeof c.id === "string" && c.id,
+    )
+    .map((c) => ({
+      id: cut(c.id, 64),
+      n: cut(c.n, 80),
+      bp: cut(c.bp, 40),
+      tg: null,
+      eq: "custom",
+      custom: true,
+    }));
   // No equipment stated (or "everything") ⇒ the whole catalogue. Filtering to nothing would
   // leave the Coach unable to propose anything at all, which is a worse failure than a
   // slightly larger payload.
-  const filtered = wanted.length ? LIBRARY.filter(e => equipmentAllows(wanted, e.id)) : LIBRARY;
+  const filtered = wanted.length
+    ? LIBRARY.filter((e) => equipmentAllows(wanted, e.id))
+    : LIBRARY;
   const equipped = filtered.length ? filtered : LIBRARY;
   // Same reasoning as the equipment fallback: a filter that removed everything is not a filter
   // worth honouring. Someone whose only kit reaches nothing but stretches gets the stretches.
-  const lifts = equipped.filter(e => !isStretch(e));
+  const lifts = equipped.filter((e) => !isStretch(e));
   const base = lifts.length ? lifts : equipped;
 
-  const pinned = new Set(keep.filter(id => LIB_BY_ID.has(id)));
+  const pinned = new Set(keep.filter((id) => LIB_BY_ID.has(id)));
   const out = [];
   const taken = new Set();
-  const add = e => { if (!taken.has(e.id)) { taken.add(e.id); out.push(e); } };
+  const add = (e) => {
+    if (!taken.has(e.id)) {
+      taken.add(e.id);
+      out.push(e);
+    }
+  };
   // What the user already trains comes first, filter or no filter.
   for (const id of pinned) add(LIB_BY_ID.get(id));
   if (base.length + out.length <= max) {
@@ -101,9 +132,12 @@ export function librarySlice(S, equipment, { keep = [], max = MAX_LIBRARY } = {}
     // order within a body part is the catalogue's own. Lanes are visited in sorted key order
     // and each takes its weight per pass, so the slice stays deterministic.
     const groups = new Map();
-    for (const e of base) { if (!groups.has(e.bp)) groups.set(e.bp, []); groups.get(e.bp).push(e); }
+    for (const e of base) {
+      if (!groups.has(e.bp)) groups.set(e.bp, []);
+      groups.get(e.bp).push(e);
+    }
     const keys = [...groups.keys()].sort();
-    const lanes = keys.map(k => groups.get(k));
+    const lanes = keys.map((k) => groups.get(k));
     const weights = keys.map(laneWeight);
     const cursor = lanes.map(() => 0);
     let progressed = true;
@@ -111,8 +145,12 @@ export function librarySlice(S, equipment, { keep = [], max = MAX_LIBRARY } = {}
       progressed = false;
       for (let i = 0; i < lanes.length && out.length < max; i++) {
         for (let n = 0; n < weights[i] && out.length < max; n++) {
-          while (cursor[i] < lanes[i].length && taken.has(lanes[i][cursor[i]].id)) cursor[i]++;
-          if (cursor[i] >= lanes[i].length) break;   // lane spent; its share flows to the rest
+          while (
+            cursor[i] < lanes[i].length &&
+            taken.has(lanes[i][cursor[i]].id)
+          )
+            cursor[i]++;
+          if (cursor[i] >= lanes[i].length) break; // lane spent; its share flows to the rest
           add(lanes[i][cursor[i]++]);
           progressed = true;
         }

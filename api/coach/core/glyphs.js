@@ -11,14 +11,38 @@
 
 // What the picker offers today.
 export const ROUTINE_GLYPHS = [
-  'figureStrength', 'arm', 'abs', 'legs', 'pullup',
-  'dumbbell', 'barbell', 'kettlebell', 'plate', 'machine',
-  'figureRun', 'bike', 'swim', 'boxing', 'timer',
-  'stretch', 'moon', 'heart', 'flame', 'bolt'
+  "figureStrength",
+  "arm",
+  "abs",
+  "legs",
+  "pullup",
+  "dumbbell",
+  "barbell",
+  "kettlebell",
+  "plate",
+  "machine",
+  "figureRun",
+  "bike",
+  "swim",
+  "boxing",
+  "timer",
+  "stretch",
+  "moon",
+  "heart",
+  "flame",
+  "bolt",
 ];
 // What a routine may still hold: the first picker's keys, and the icons old emoji map onto.
-export const LEGACY_ROUTINE_GLYPHS = ['trophy', 'medal', 'crown', 'flag', 'star', 'target', 'shield'];
-export const DEFAULT_GLYPH = 'figureStrength';
+export const LEGACY_ROUTINE_GLYPHS = [
+  "trophy",
+  "medal",
+  "crown",
+  "flag",
+  "star",
+  "target",
+  "shield",
+];
+export const DEFAULT_GLYPH = "figureStrength";
 
 const KNOWN = new Set([...ROUTINE_GLYPHS, ...LEGACY_ROUTINE_GLYPHS]);
 // Pictographs with their joiners, variation selectors and skin tones — or a single flag, which is
@@ -27,8 +51,10 @@ const KNOWN = new Set([...ROUTINE_GLYPHS, ...LEGACY_ROUTINE_GLYPHS]);
 const PICTOGRAPHS = /^(?:\p{Extended_Pictographic}|[‍️\u{1F3FB}-\u{1F3FF}])+$/u;
 const FLAG = /^[\u{1F1E6}-\u{1F1FF}]{2}$/u;
 
-export const glyphStr = v => {
-  if (typeof v !== 'string' || !v) return DEFAULT_GLYPH;
+export const glyphStr = (v) => {
+  if (typeof v !== "string" || !v) return DEFAULT_GLYPH;
   if (KNOWN.has(v)) return v;
-  return v.length <= 16 && (PICTOGRAPHS.test(v) || FLAG.test(v)) ? v : DEFAULT_GLYPH;
+  return v.length <= 16 && (PICTOGRAPHS.test(v) || FLAG.test(v))
+    ? v
+    : DEFAULT_GLYPH;
 };

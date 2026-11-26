@@ -12,3 +12,8 @@ steps:
       - npm test
       - node scripts/check-locales.mjs
       - npm run build
+
+  formatting:
+    image: node:24-bookworm-slim
+    commands:
+      - npx --yes @biomejs/biome@2.6.9 format .

@@ -4,9 +4,9 @@
  * prompt from stdin, matching the adapter interface. Everything else here exists to
  * stop the CLI reaching for state a sandboxed job does not have.
  */
-import { run } from './spawn.js';
+import { run } from "./spawn.js";
 
-const CLI = 'codex';
+const CLI = "codex";
 
 /**
  * The exact argv every Codex job runs with.
@@ -17,26 +17,38 @@ const CLI = 'codex';
  */
 export function argvFor(model) {
   const argv = [
-    'exec', '-',              // non-interactive; '-' reads the prompt from stdin
-    '--skip-git-repo-check',  // the job dir is a bare mkdtemp, not a repo -- without this it refuses to run
-    '--ephemeral',            // do not write session files; the job dir dies with the job anyway
-    '--ignore-user-config'    // $CODEX_HOME/config.toml would be an admin-invisible input to every job
+    "exec",
+    "-", // non-interactive; '-' reads the prompt from stdin
+    "--skip-git-repo-check", // the job dir is a bare mkdtemp, not a repo -- without this it refuses to run
+    "--ephemeral", // do not write session files; the job dir dies with the job anyway
+    "--ignore-user-config", // $CODEX_HOME/config.toml would be an admin-invisible input to every job
   ];
-  if (model) argv.push('--model', model);
+  if (model) argv.push("--model", model);
   return argv;
 }
 
 export default {
-  id: 'codex',
+  id: "codex",
   spawns: true,
   cli: CLI,
 
   async check(cfg, env) {
-    const r = await run(CLI, ['--version'], { env, timeoutMs: 20000 });
-    if (r.spawnError) return { ok: false, error: `the ${CLI} CLI is not installed in this image` };
-    if (r.timedOut) return { ok: false, error: `the ${CLI} CLI did not respond` };
-    if (r.code !== 0) return { ok: false, error: (r.stderr || '').trim().slice(0, 300) || `${CLI} --version exited ${r.code}` };
-    return { ok: true, version: (r.stdout || '').trim() };
+    const r = await run(CLI, ["--version"], { env, timeoutMs: 20000 });
+    if (r.spawnError)
+      return {
+        ok: false,
+        error: `the ${CLI} CLI is not installed in this image`,
+      };
+    if (r.timedOut)
+      return { ok: false, error: `the ${CLI} CLI did not respond` };
+    if (r.code !== 0)
+      return {
+        ok: false,
+        error:
+          (r.stderr || "").trim().slice(0, 300) ||
+          `${CLI} --version exited ${r.code}`,
+      };
+    return { ok: true, version: (r.stdout || "").trim() };
   },
 
   async invoke({ prompt, jobDir, env, model, timeoutMs }) {
@@ -48,7 +60,12 @@ export default {
     // Sandbox mode is left at the CLI's default (read-only). The job only needs the model
     // to write an answer to stdout, and this process is already an unprivileged user in a
     // container -- widening it here would trade that away for nothing.
-    const r = await run(CLI, argv, { stdin: prompt, cwd: jobDir, env, timeoutMs });
-    return { ...r, text: (r.stdout || '').trim() };
-  }
+    const r = await run(CLI, argv, {
+      stdin: prompt,
+      cwd: jobDir,
+      env,
+      timeoutMs,
+    });
+    return { ...r, text: (r.stdout || "").trim() };
+  },
 };

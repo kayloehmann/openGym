@@ -8,30 +8,43 @@
 //
 // This module is intentionally light. The setup screen imports it before the user has chosen
 // anything, and the promise there is that nothing AI-shaped loads until they do.
-import { readJsonFile, writeJsonFile } from './mobile.js'
+import { readJsonFile, writeJsonFile } from "./mobile.js";
 
-const FILE = 'opengym-coach.json'
+const FILE = "opengym-coach.json";
 
-export const COACH_MODES = ['off', 'server', 'byok']
+export const COACH_MODES = ["off", "server", "byok"];
 
-const DEFAULTS = { mode: 'off', provider: null, model: null, baseUrl: null, handle: null, daily: null, pending: null }
+const DEFAULTS = {
+  mode: "off",
+  provider: null,
+  model: null,
+  baseUrl: null,
+  handle: null,
+  daily: null,
+  pending: null,
+};
 
-let cache = null
+let cache = null;
 export async function loadCoachDevice() {
-  if (cache) return cache
-  const saved = await readJsonFile(FILE)
-  cache = { ...DEFAULTS, ...(saved && typeof saved === 'object' ? saved : {}) }
-  if (!COACH_MODES.includes(cache.mode)) cache.mode = 'off'
-  return cache
+  if (cache) return cache;
+  const saved = await readJsonFile(FILE);
+  cache = { ...DEFAULTS, ...(saved && typeof saved === "object" ? saved : {}) };
+  if (!COACH_MODES.includes(cache.mode)) cache.mode = "off";
+  return cache;
 }
 export async function saveCoachDevice(patch) {
-  const next = { ...(await loadCoachDevice()), ...patch }
-  cache = next
-  await writeJsonFile(FILE, next)
-  return next
+  const next = { ...(await loadCoachDevice()), ...patch };
+  cache = next;
+  await writeJsonFile(FILE, next);
+  return next;
 }
 /** The part of it a UI may show: never the pending proposal, never the handle. */
-export const coachDeviceSettings = d => d ? { mode: d.mode, provider: d.provider, model: d.model, baseUrl: d.baseUrl } : null
+export const coachDeviceSettings = (d) =>
+  d
+    ? { mode: d.mode, provider: d.provider, model: d.model, baseUrl: d.baseUrl }
+    : null;
 
 // Test seam.
-export function _resetCoachDevice() { cache = null }
+export function _resetCoachDevice() {
+  cache = null;
+}

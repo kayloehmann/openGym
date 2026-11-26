@@ -13,9 +13,9 @@
  * review — and cached for a few minutes, because a box with forty profiles should not parse
  * forty JSON blobs on every open of the sheet.
  */
-import * as cfgStore from './config.js';
-import { readState, listUserIds, isSharing } from './jobs.js';
-import { libraryHas, libraryName } from './core/library.js';
+import * as cfgStore from "./config.js";
+import { readState, listUserIds, isSharing } from "./jobs.js";
+import { libraryHas, libraryName } from "./core/library.js";
 
 export const MIN_PEOPLE = 3;
 export const MAX_EXERCISES = 12;
@@ -23,22 +23,26 @@ const WEEKS_STRENGTH = 12;
 const WEEKS_FREQUENCY = 8;
 const CACHE_MS = 5 * 60000;
 const LB_TO_KG = 0.45359237;
-const REP_CAP = 12;   // mirrors frontend/src/lib/onerm.js: past twelve reps the estimate stops meaning much
+const REP_CAP = 12; // mirrors frontend/src/lib/onerm.js: past twelve reps the estimate stops meaning much
 
 // Mirror of frontend/src/lib/workout-model.js isWarmupRow: an explicit phase wins over the
 // legacy boolean.
-const isWarmup = s => {
-  const ph = typeof s?.phase === 'string' ? s.phase.trim().toLowerCase() : '';
-  if (ph) return ph === 'warmup' || ph === 'warm-up' || ph === 'warm_up';
+const isWarmup = (s) => {
+  const ph = typeof s?.phase === "string" ? s.phase.trim().toLowerCase() : "";
+  if (ph) return ph === "warmup" || ph === "warm-up" || ph === "warm_up";
   return s?.warmup === true;
 };
 const epley = (w, r) => w * (1 + Math.min(r, REP_CAP) / 30);
-const round1 = n => Math.round(n * 10) / 10;
-const median = arr => {
-  const a = arr.filter(n => Number.isFinite(n)).sort((x, y) => x - y);
+const round1 = (n) => Math.round(n * 10) / 10;
+const median = (arr) => {
+  const a = arr.filter((n) => Number.isFinite(n)).sort((x, y) => x - y);
   return a.length ? a[Math.floor(a.length / 2)] : null;
 };
-const isoDaysAgo = days => { const d = new Date(); d.setDate(d.getDate() - days); return d.toISOString().slice(0, 10); };
+const isoDaysAgo = (days) => {
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  return d.toISOString().slice(0, 10);
+};
 
 /** One participant, reduced to what the cohort reads: kg throughout.
  *
@@ -50,24 +54,28 @@ const isoDaysAgo = days => { const d = new Date(); d.setDate(d.getDate() - days)
 function participant(S) {
   const since = isoDaysAgo(WEEKS_STRENGTH * 7);
   const sinceFreq = isoDaysAgo(WEEKS_FREQUENCY * 7);
-  const toKg = S.unit === 'lb' ? LB_TO_KG : 1;
-  const workouts = (S.workouts || []).filter(w => w && w.d && w.d >= since);
+  const toKg = S.unit === "lb" ? LB_TO_KG : 1;
+  const workouts = (S.workouts || []).filter((w) => w && w.d && w.d >= since);
   if (!workouts.length) return null;
   const best = {};
-  workouts.forEach(w => (w.entries || []).forEach(en => {
-    if (!libraryHas(en?.id)) return;
-    (en.sets || []).forEach(s => {
-      if (!s.done || isWarmup(s) || !(s.w > 0) || !(s.r > 0)) return;
-      const est = epley(s.w * toKg, s.r);
-      if (est > (best[en.id] || 0)) best[en.id] = est;
-    });
-  }));
-  const recent = workouts.filter(w => w.d >= sinceFreq).length;
+  workouts.forEach((w) =>
+    (w.entries || []).forEach((en) => {
+      if (!libraryHas(en?.id)) return;
+      (en.sets || []).forEach((s) => {
+        if (!s.done || isWarmup(s) || !(s.w > 0) || !(s.r > 0)) return;
+        const est = epley(s.w * toKg, s.r);
+        if (est > (best[en.id] || 0)) best[en.id] = est;
+      });
+    }),
+  );
+  const recent = workouts.filter((w) => w.d >= sinceFreq).length;
   return { sessionsPerWeek: round1(recent / WEEKS_FREQUENCY), best };
 }
 
-let cache = null;   // { at, rows: Map<uid, participant> }
-export function invalidate() { cache = null; }
+let cache = null; // { at, rows: Map<uid, participant> }
+export function invalidate() {
+  cache = null;
+}
 
 function rows() {
   if (cache && Date.now() - cache.at < CACHE_MS) return cache.rows;
@@ -88,12 +96,20 @@ export function computeCohort(uid) {
   if (!isSharing(uid)) return { ok: false, enabled: true, sharing: false };
   const all = rows();
   const people = all.size;
-  if (people < MIN_PEOPLE) return { ok: false, enabled: true, sharing: true, people, minPeople: MIN_PEOPLE };
+  if (people < MIN_PEOPLE)
+    return {
+      ok: false,
+      enabled: true,
+      sharing: true,
+      people,
+      minPeople: MIN_PEOPLE,
+    };
 
   const me = all.get(uid) || null;
   const S = readState(uid);
-  const unit = S?.unit === 'lb' ? 'lb' : 'kg';
-  const out = v => (v == null ? null : round1(unit === 'lb' ? v / LB_TO_KG : v));
+  const unit = S?.unit === "lb" ? "lb" : "kg";
+  const out = (v) =>
+    v == null ? null : round1(unit === "lb" ? v / LB_TO_KG : v);
 
   const byEx = new Map();
   for (const p of all.values()) {
@@ -104,25 +120,51 @@ export function computeCohort(uid) {
   }
   const exercises = [...byEx.entries()]
     .filter(([, list]) => list.length >= MIN_PEOPLE)
-    .map(([id, list]) => ({ id, name: libraryName(id), people: list.length, medianKg: median(list), youKg: me?.best[id] ?? null, list }))
+    .map(([id, list]) => ({
+      id,
+      name: libraryName(id),
+      people: list.length,
+      medianKg: median(list),
+      youKg: me?.best[id] ?? null,
+      list,
+    }))
     .sort((a, b) => b.people - a.people || a.name.localeCompare(b.name))
     .slice(0, MAX_EXERCISES);
 
   // Where the requester stands: for each listed exercise they trained, the share of the
   // *other* participants whose best is at or below theirs, averaged.
-  const ranks = exercises.filter(x => x.youKg != null).map(x => {
-    const others = x.list.length - 1;
-    if (others <= 0) return null;
-    const below = x.list.filter(v => v <= x.youKg).length - 1;
-    return below / others;
-  }).filter(v => v != null);
-  const rankPct = ranks.length ? Math.round(ranks.reduce((a, b) => a + b, 0) / ranks.length * 100) : null;
+  const ranks = exercises
+    .filter((x) => x.youKg != null)
+    .map((x) => {
+      const others = x.list.length - 1;
+      if (others <= 0) return null;
+      const below = x.list.filter((v) => v <= x.youKg).length - 1;
+      return below / others;
+    })
+    .filter((v) => v != null);
+  const rankPct = ranks.length
+    ? Math.round((ranks.reduce((a, b) => a + b, 0) / ranks.length) * 100)
+    : null;
 
   return {
-    ok: true, enabled: true, sharing: true, people, minPeople: MIN_PEOPLE, unit,
-    sessionsPerWeek: { median: median([...all.values()].map(p => p.sessionsPerWeek)), you: me?.sessionsPerWeek ?? 0 },
-    exercises: exercises.map(x => ({ id: x.id, name: x.name, people: x.people, median: out(x.medianKg), you: out(x.youKg) })),
-    rankPct
+    ok: true,
+    enabled: true,
+    sharing: true,
+    people,
+    minPeople: MIN_PEOPLE,
+    unit,
+    sessionsPerWeek: {
+      median: median([...all.values()].map((p) => p.sessionsPerWeek)),
+      you: me?.sessionsPerWeek ?? 0,
+    },
+    exercises: exercises.map((x) => ({
+      id: x.id,
+      name: x.name,
+      people: x.people,
+      median: out(x.medianKg),
+      you: out(x.youKg),
+    })),
+    rankPct,
   };
 }
 
@@ -134,19 +176,34 @@ export function cohortForPayload(uid) {
     if (all.size < MIN_PEOPLE) return null;
     const me = all.get(uid) || null;
     const byEx = new Map();
-    for (const p of all.values()) for (const [id, est] of Object.entries(p.best)) {
-      if (!byEx.has(id)) byEx.set(id, []);
-      byEx.get(id).push(est);
-    }
+    for (const p of all.values())
+      for (const [id, est] of Object.entries(p.best)) {
+        if (!byEx.has(id)) byEx.set(id, []);
+        byEx.get(id).push(est);
+      }
     const exercises = [...byEx.entries()]
       .filter(([, list]) => list.length >= MIN_PEOPLE)
-      .map(([id, list]) => ({ id, name: libraryName(id), median: round1(median(list)), you: me?.best[id] != null ? round1(me.best[id]) : null }))
-      .sort((a, b) => (b.you != null) - (a.you != null) || a.name.localeCompare(b.name))
+      .map(([id, list]) => ({
+        id,
+        name: libraryName(id),
+        median: round1(median(list)),
+        you: me?.best[id] != null ? round1(me.best[id]) : null,
+      }))
+      .sort(
+        (a, b) =>
+          (b.you != null) - (a.you != null) || a.name.localeCompare(b.name),
+      )
       .slice(0, MAX_EXERCISES);
     return {
-      unit: 'kg', people: all.size,
-      sessionsPerWeek: { median: median([...all.values()].map(p => p.sessionsPerWeek)), you: me?.sessionsPerWeek ?? 0 },
-      exercises
+      unit: "kg",
+      people: all.size,
+      sessionsPerWeek: {
+        median: median([...all.values()].map((p) => p.sessionsPerWeek)),
+        you: me?.sessionsPerWeek ?? 0,
+      },
+      exercises,
     };
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }
